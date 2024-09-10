@@ -73,6 +73,7 @@ export default function Photobooth() {
 
   useEffect(() => {
     if (status === "animateStart") {
+      console.group("Photobooth animateStart useEffect");
       const top =
         previousCapturesContainerRef?.current?.getBoundingClientRect()?.top ??
         0;
@@ -84,6 +85,7 @@ export default function Photobooth() {
           maxHeight: MAX_HEIGHT_TARGET_RM,
         },
       });
+      console.groupEnd();
       transitionState();
     }
   }, [status]);
