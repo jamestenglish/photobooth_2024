@@ -95,7 +95,11 @@ function reducer(state: StateType, action: ActionType): StateType {
   }
 }
 
-export default function usePhotoboothState() {
+export default function usePhotoboothState({
+  startAnimation,
+}: {
+  startAnimation: () => void;
+}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { status: statusRaw, imgs: imgsRaw } = state;
 
@@ -123,6 +127,7 @@ export default function usePhotoboothState() {
         }, FLASH_TIME_IN_MS)
       );
     }
+
     if (status === "capturePreview") {
       ids.push(
         setTimeout(() => {
@@ -130,6 +135,12 @@ export default function usePhotoboothState() {
         }, PREVIEW_TIME_IN_MS)
       );
     }
+
+    if (status === "animateStart") {
+      startAnimation();
+      transitionState();
+    }
+
     return () => {
       ids.forEach((id) => {
         if (id !== undefined) {

@@ -14,6 +14,7 @@ const MUTED_GROUPS = [
   "usePhotoboothState getNextStatus",
   "usePhotoboothState reducer",
   "Photobooth",
+  "Photobooth useSpring onChange",
 ];
 
 const groupOrig = console.group;

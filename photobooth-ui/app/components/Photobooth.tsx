@@ -1,94 +1,51 @@
+import { useState, useEffect, useRef } from "react";
 import {
-  useTransition,
-  useSpring,
-  useChain,
-  config,
-  animated,
-  useSpringRef,
-  easings,
-} from "@react-spring/web";
-
-import { useEffect, useRef } from "react";
+  env,
+  AutoModel,
+  AutoProcessor,
+  RawImage,
+} from "@huggingface/transformers";
 import Countdowner from "./Countdowner";
 import Flash from "./Flash";
 import CapturePreview from "./CapturePreview";
 import PhotoboothControls from "./PhotoboothControls";
 import usePhotoboothState from "~/hooks/usePhotoboothState";
-import {
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT,
-  MAX_HEIGHT_START_RM,
-  MAX_HEIGHT_TARGET_RM,
-  COLUMN_GAP_START_RM,
-  COLUMN_GAP_TARGET_RM,
-  ANIMATION_DURATION_MS,
-} from "constants/sizes";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "constants/sizes";
+import useAnimation from "~/hooks/useAnimation";
 
 export default function Photobooth() {
-  const { status, imgs, transitionState, captureImg } = usePhotoboothState();
+  const { containerRef, previousCapturesContainerRef, startAnimation } =
+    useAnimation();
+  const { status, imgs, transitionState, captureImg } = usePhotoboothState({
+    startAnimation,
+  });
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const modelRef = useRef(null);
+  const processorRef = useRef(null);
 
-  const previousCapturesContainerRef = useRef<HTMLDivElement>(null);
-
-  const isPrintStatus = status === "print";
-
-  const [{ scrollY }, api] = useSpring(() => ({
-    config: {
-      easing: easings.easeInCubic,
-      duration: ANIMATION_DURATION_MS,
-    },
-    from: {
-      scrollY: 0,
-      maxHeight: MAX_HEIGHT_START_RM,
-      columnGap: COLUMN_GAP_START_RM,
-    },
-    onChange: (result, spring, item) => {
-      console.group("Photobooth useSpring onChange");
-      containerRef?.current?.scroll(0, result.value.scrollY);
-      if (
-        previousCapturesContainerRef?.current?.style.columnGap !== undefined
-      ) {
-        previousCapturesContainerRef.current.style.columnGap = `${result.value.columnGap}rem`;
-
-        const imgs = Array.from(
-          previousCapturesContainerRef.current.getElementsByClassName(
-            "preview-img"
-          )
-        );
-        imgs.forEach((el) => {
-          const img = el as HTMLImageElement;
-          img.style.maxHeight = `${result.value.maxHeight}rem`;
-        });
-      }
-
-      console.log({
-        scrollY: result.value.scrollY,
-        columnGap: previousCapturesContainerRef?.current?.style.columnGap,
-      });
-
-      console.groupEnd();
-    },
-  }));
-
+  const [error, setError] = useState<any>("");
   useEffect(() => {
-    if (status === "animateStart") {
-      console.group("Photobooth animateStart useEffect");
-      const top =
-        previousCapturesContainerRef?.current?.getBoundingClientRect()?.top ??
-        0;
-      console.log(`-----\n-----\n-----\n-----\n-----\n-----\n-----\n${top}`);
-      api.start({
-        to: {
-          scrollY: top,
-          columnGap: COLUMN_GAP_TARGET_RM,
-          maxHeight: MAX_HEIGHT_TARGET_RM,
-        },
-      });
-      console.groupEnd();
-      transitionState();
-    }
-  }, [status]);
+    (async () => {
+      try {
+        // @ts-ignore
+        if (!navigator.gpu) {
+          throw new Error("WebGPU is not supported in this browser.");
+        }
+        const model_id = "Xenova/modnet";
+        // @ts-ignore
+        env.backends.onnx.wasm.proxy = false;
+        // @ts-ignore
+        modelRef.current ??= await AutoModel.from_pretrained(model_id, {
+          device: "webgpu",
+        });
+        // @ts-ignore
+        processorRef.current ??= await AutoProcessor.from_pretrained(model_id);
+      } catch (err) {
+        console.error(err);
+        setError(err);
+      }
+    })();
+  }, []);
 
   const onButtonPress = transitionState;
 
