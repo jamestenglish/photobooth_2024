@@ -1,4 +1,4 @@
-import { StatusType } from "./WebCamContainer";
+import { StatusType } from "~/hooks/usePhotoboothState";
 
 export default function CapturePreview({
   status,
@@ -10,7 +10,7 @@ export default function CapturePreview({
   const isCapturePreview = status === "capturePreview";
 
   if (isCapturePreview && lastImg !== undefined) {
-    return <img src={lastImg} />;
+    return <img src={lastImg} className="my-auto" />;
   }
   return <></>;
 }

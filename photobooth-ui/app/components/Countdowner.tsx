@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { StatusType } from "./WebCamContainer";
+import { StatusType } from "~/hooks/usePhotoboothState";
+import { SCREEN_WIDTH, COUNTDOWN_TIME_IN_MS } from "constants/sizes";
 
 export default function Countdowner({
   status,
@@ -21,7 +22,7 @@ export default function Countdowner({
         } else {
           setCountdown(newCountdown);
         }
-      }, 1000);
+      }, COUNTDOWN_TIME_IN_MS);
     }
     return () => {
       if (id !== undefined) {
@@ -34,5 +35,17 @@ export default function Countdowner({
     return <></>;
   }
 
-  return <span>{countdown}</span>;
+  return (
+    <div
+      style={{ fontSize: "16rem", maxWidth: `${SCREEN_WIDTH}px` }}
+      className="my-16 flex absolute justify-center z-10 font-serif w-full"
+    >
+      <span
+        style={{ animation: "ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite" }}
+        className="relative inline-flex drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)] text-white relative mx-auto"
+      >
+        {countdown}
+      </span>
+    </div>
+  );
 }
