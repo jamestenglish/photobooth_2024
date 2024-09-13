@@ -6,7 +6,7 @@ import {
   COLUMN_GAP_START_RM,
   COLUMN_GAP_TARGET_RM,
   ANIMATION_DURATION_MS,
-} from "constants/sizes";
+} from "~/constants";
 
 export default function useAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);

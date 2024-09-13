@@ -10,7 +10,7 @@ import Flash from "./Flash";
 import CapturePreview from "./CapturePreview";
 import PhotoboothControls from "./PhotoboothControls";
 import usePhotoboothState from "~/hooks/usePhotoboothState";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "constants/sizes";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "~/constants";
 import useAnimation from "~/hooks/useAnimation";
 
 export default function Photobooth() {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { StatusType } from "~/hooks/usePhotoboothState";
-import { SCREEN_WIDTH, COUNTDOWN_TIME_IN_MS } from "constants/sizes";
+import { SCREEN_WIDTH, COUNTDOWN_TIME_IN_MS } from "~/constants";
 
 export default function Countdowner({
   status,

@@ -1,5 +1,5 @@
 import { useCallback, useReducer, useEffect, useMemo } from "react";
-import { FLASH_TIME_IN_MS, PREVIEW_TIME_IN_MS } from "constants/sizes";
+import { FLASH_TIME_IN_MS, PREVIEW_TIME_IN_MS } from "~/constants";
 
 export type StatusType =
   | "ready"
@@ -19,6 +19,7 @@ export type StateType = {
   status: StatusType;
   imgIndex: 0 | 1 | 2;
   imgs: Array<string>;
+  origImgs: Array<string>;
 };
 
 type StatusMapType = { [key in StatusType]: (state: StateType) => StatusType };
@@ -43,12 +44,14 @@ const initialState: StateType = {
   imgIndex: 0,
   imgs: [],
   status: "ready",
+  origImgs: []
 };
 
 const buttonPressState: StateType = {
   imgIndex: 0,
   imgs: [],
   status: "countdown",
+  origImgs: []
 };
 
 const getNextStatus = ({
@@ -78,7 +81,7 @@ function reducer(state: StateType, action: ActionType): StateType {
       const newImgs = [...imgs, payload];
 
       console.groupEnd();
-      return { ...state, imgs: newImgs };
+      return { ...state, imgs: newImgs, origImgs: newImgs };
 
     case "nextState":
       console.log("nextState");
