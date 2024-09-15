@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { StatusType } from "~/hooks/usePhotoboothState";
 import { SCREEN_WIDTH, COUNTDOWN_TIME_IN_MS } from "~/constants";
+import { usePhotoboothStatus } from "./PhotoboothStateProvider";
 
 export default function Countdowner({
-  status,
   onCountdownFinished,
 }: {
-  status: StatusType;
   onCountdownFinished: () => void;
 }) {
+  const status = usePhotoboothStatus();
+
   const [countdown, setCountdown] = useState<number>(3);
 
   useEffect(() => {
@@ -36,13 +37,13 @@ export default function Countdowner({
   }
 
   return (
-    <div
-      style={{ fontSize: "16rem", maxWidth: `${SCREEN_WIDTH}px` }}
-      className="my-16 flex absolute justify-center z-10 font-serif w-full"
-    >
+    <div className="grid z-10 col-start-1 col-span-3 row-start-1 row-span-2 justify-center items-center">
       <span
-        style={{ animation: "ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite" }}
-        className="relative inline-flex drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)] text-white relative mx-auto"
+        style={{
+          fontSize: "16rem",
+          animation: "ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite",
+        }}
+        className="animate-ping mountains-of-christmas-bold drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)] text-white text-outline"
       >
         {countdown}
       </span>

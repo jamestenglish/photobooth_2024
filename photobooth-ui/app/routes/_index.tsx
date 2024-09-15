@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 
-import Photobooth from "~/components/Photobooth";
+import PhotoboothContainer from "~/components/PhotoboothContainer";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <>
-      <Photobooth />
+      <PhotoboothContainer />
       {/* <div className="font-sans p-4">
         <h1 className="text-3xl">Welcome to Remix</h1>
         <ul className="list-disc mt-4 pl-6 space-y-2">

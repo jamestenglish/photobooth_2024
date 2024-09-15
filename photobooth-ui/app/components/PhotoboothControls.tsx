@@ -1,45 +1,59 @@
 import WebCamDisplay from "./WebCamDisplay";
 
 import PreviousCaptures from "./PreviousCaptures";
-import { StatusType } from "~/hooks/usePhotoboothState";
+import { SCREEN_WIDTH, SCREEN_HEIGHT, YETIIZE_STATUSES } from "~/constants";
+import {
+  useAnimationRefs,
+  usePhotoboothStatus,
+} from "./PhotoboothStateProvider";
 
 export default function PhotoboothControls({
   onButtonPress,
   onCapture,
-  status,
-  imgs,
-  previousCapturesContainerRef,
 }: {
   onButtonPress: () => void;
   onCapture: (imgSrc: string) => void;
-  status: StatusType;
-  imgs: Array<string>;
-  previousCapturesContainerRef: React.RefObject<HTMLDivElement>;
 }) {
+  const status = usePhotoboothStatus();
+  const { webcamDisplayRef, previousCapturesContainerRef, containerRef } =
+    useAnimationRefs();
+
   const areControlsVisible = status !== "capturePreview";
-  // const classNames =
-  //   status === "print"
-  //     ? "transition transition-[height] transform ease-in delay-1000 duration-1000 aria-checked:scale-y-0"
-  //     : "";
+
+  const areControlsPresent = !YETIIZE_STATUSES.includes(status);
 
   return (
     <>
-      <div
-        className={`${areControlsVisible ? "" : "hidden"} flex items-center flex-col mx-auto gap-y-2 grow`}
-      >
-        <WebCamDisplay
-          onButtonPress={onButtonPress}
-          onCapture={onCapture}
-          status={status}
-        />
-      </div>
+      {" "}
+      {areControlsPresent && (
+        <div
+          className="col-start-1 col-span-3 row-start-1 row-span-3 items-center align-middle"
+          style={{ border: "1px green" }}
+        >
+          <div
+            ref={containerRef}
+            className="flex flex-col gap-6 h-full overflow-hidden"
+          >
+            <div
+              ref={webcamDisplayRef}
+              className={`${areControlsVisible ? "" : "hidden"} flex items-center flex-col mx-auto gap-y-2`}
+            >
+              <WebCamDisplay
+                onButtonPress={onButtonPress}
+                onCapture={onCapture}
+                status={status}
+              />
+            </div>
 
-      <div
-        ref={previousCapturesContainerRef}
-        className={`${areControlsVisible ? "" : "hidden"} flex justify-center items-center flex-row mx-auto gap-x-2 flex-1`}
-      >
-        <PreviousCaptures imgs={imgs} />
-      </div>
+            <div
+              ref={previousCapturesContainerRef}
+              className={`${areControlsVisible ? "" : "hidden"} flex justify-center items-start content-start flex-row mx-auto gap-x-2 flex-1`}
+            >
+              <PreviousCaptures />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

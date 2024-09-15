@@ -12,40 +12,58 @@ import PhotoboothControls from "./PhotoboothControls";
 import usePhotoboothState from "~/hooks/usePhotoboothState";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "~/constants";
 import useAnimation from "~/hooks/useAnimation";
+import {
+  useAnimationRefs,
+  usePhotoboothImages,
+  usePhotoboothStateMethods,
+  usePhotoboothStatus,
+} from "./PhotoboothStateProvider";
+import YetiizeLoading from "./YetiizeLoading";
+import YetiizeControls from "./YetiizeControls";
+
+// import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 export default function Photobooth() {
-  const { containerRef, previousCapturesContainerRef, startAnimation } =
-    useAnimation();
-  const { status, imgs, transitionState, captureImg } = usePhotoboothState({
-    startAnimation,
-  });
+  // const { containerRef, previousCapturesContainerRef, startAnimation } =
+  //   useAnimation();
+  // const { status, imgs, transitionState, captureImg } = usePhotoboothState({
+  //   startAnimation,
+  // });
 
   const modelRef = useRef(null);
   const processorRef = useRef(null);
 
   const [error, setError] = useState<any>("");
-  useEffect(() => {
-    (async () => {
-      try {
-        // @ts-ignore
-        if (!navigator.gpu) {
-          throw new Error("WebGPU is not supported in this browser.");
-        }
-        const model_id = "Xenova/modnet";
-        // @ts-ignore
-        env.backends.onnx.wasm.proxy = false;
-        // @ts-ignore
-        modelRef.current ??= await AutoModel.from_pretrained(model_id, {
-          device: "webgpu",
-        });
-        // @ts-ignore
-        processorRef.current ??= await AutoProcessor.from_pretrained(model_id);
-      } catch (err) {
-        console.error(err);
-        setError(err);
-      }
-    })();
-  }, []);
+  const { captureImg, transitionState } = usePhotoboothStateMethods();
+  const { imgs } = usePhotoboothImages();
+
+  // const { containerRef } = useAnimationRefs();
+  // const handle = useFullScreenHandle();
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       // @ts-ignore
+  //       if (!navigator.gpu) {
+  //         throw new Error("WebGPU is not supported in this browser.");
+  //       }
+  //       const model_id = "Xenova/modnet";
+  //       // @ts-ignore
+  //       env.backends.onnx.wasm.proxy = false;
+  //       // @ts-ignore
+  //       modelRef.current ??= await AutoModel.from_pretrained(model_id, {
+  //         device: "webgpu",
+  //       });
+  //       // @ts-ignore
+  //       processorRef.current ??= await AutoProcessor.from_pretrained(model_id);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError(err);
+  //     }
+  //   })();
+  // }, []);
+
+  const status = usePhotoboothStatus();
 
   const onButtonPress = transitionState;
 
@@ -58,16 +76,9 @@ export default function Photobooth() {
 
   const lastImg = imgs.length > 0 ? imgs[imgs.length - 1] : undefined;
 
-  const areControlsVisible = status !== "capturePreview";
-
-  console.group("Photobooth");
-  console.log(`status: ${status} | areControlsVisible: ${areControlsVisible}`);
-  console.groupEnd();
-
   return (
     <>
       <div
-        ref={containerRef}
         style={{
           height: `${SCREEN_HEIGHT}px`,
           width: `${SCREEN_WIDTH}px`,
@@ -77,26 +88,28 @@ export default function Photobooth() {
         }}
         className="overflow-hidden"
       >
-        <Flash status={status} />
-
-        <Countdowner
-          status={status}
-          onCountdownFinished={onCountdownFinished}
-        />
-
         <div
-          className="flex flex-col gap-6 h-full items-center"
-          style={{ border: "1px green" }}
+          className="grid grid-cols-3 grid-rows-3"
+          style={{
+            height: `${SCREEN_HEIGHT}px`,
+            width: `${SCREEN_WIDTH}px`,
+            maxHeight: `${SCREEN_HEIGHT}px`,
+            maxWidth: `${SCREEN_WIDTH}px`,
+          }}
         >
-          <CapturePreview lastImg={lastImg} status={status} />
+          <Flash />
+
+          <Countdowner onCountdownFinished={onCountdownFinished} />
+
+          <YetiizeLoading />
+          <CapturePreview lastImg={lastImg} />
 
           <PhotoboothControls
             onButtonPress={onButtonPress}
             onCapture={onCapture}
-            status={status}
-            imgs={imgs}
-            previousCapturesContainerRef={previousCapturesContainerRef}
           />
+
+          <YetiizeControls />
         </div>
         <div
           style={{
@@ -107,6 +120,9 @@ export default function Photobooth() {
         >
           foo
         </div>
+      </div>
+      <div>
+        <div className="whitespace-pre">status: {status}</div>
       </div>
     </>
   );

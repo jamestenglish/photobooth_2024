@@ -1,9 +1,13 @@
-import { StatusType } from "~/hooks/usePhotoboothState";
+import { usePhotoboothStatus } from "./PhotoboothStateProvider";
 
-export default function Flash({ status }: { status: StatusType }) {
+export default function Flash() {
+  const status = usePhotoboothStatus();
   if (status === "capture" || status === "captureFlash") {
     return (
-      <div style={{ backgroundColor: "white" }} className="w-screen h-screen">
+      <div
+        style={{ border: "1px solid magenta" }}
+        className="z-10 bg-white col-start-1 col-span-3 row-start-1 row-span-3 w-screen h-screen"
+      >
         {" "}
       </div>
     );

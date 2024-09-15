@@ -23,7 +23,6 @@ export async function processImage({
   imageBase64Url: string;
   name: string;
 }): Promise<File> {
-  console.log({ imageBase64Url });
   const img = await RawImage.fromURL(imageBase64Url);
 
   // Pre-process image

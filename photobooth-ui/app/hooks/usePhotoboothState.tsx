@@ -1,5 +1,6 @@
 import { useCallback, useReducer, useEffect, useMemo } from "react";
 import { FLASH_TIME_IN_MS, PREVIEW_TIME_IN_MS } from "~/constants";
+import { AnimationStatusType } from "./useAnimation";
 
 export type StatusType =
   | "ready"
@@ -9,10 +10,21 @@ export type StatusType =
   | "capturePreview"
   | "animateStart"
   | "animateInProgress"
-  | "print";
+  | "yetiizeReady"
+  | "yetiizeStart"
+  | "yetiizeFinish"
+  | "print"
+  | "noop";
+
+type YetiizeFinishPayloadType = {
+  imgSrc: string;
+  index: number;
+};
 
 type ActionType =
   | { type: "nextState" }
+  | { type: "yetiizeStart" }
+  | { type: "yetiizeFinish"; payload: YetiizeFinishPayloadType }
   | { type: "captureImg"; payload: string };
 
 export type StateType = {
@@ -20,9 +32,13 @@ export type StateType = {
   imgIndex: 0 | 1 | 2;
   imgs: Array<string>;
   origImgs: Array<string>;
+  bgImgs: Array<string>;
 };
 
 type StatusMapType = { [key in StatusType]: (state: StateType) => StatusType };
+
+// const capturePreviewNextState = "noop";
+const capturePreviewNextState = "animateStart";
 
 const statusMap: StatusMapType = {
   ready: (state) => "countdown",
@@ -32,26 +48,33 @@ const statusMap: StatusMapType = {
   capturePreview: (state) => {
     const { imgs } = state;
 
-    const capturePreviewNext = imgs.length < 3 ? "countdown" : "animateStart";
+    const capturePreviewNext =
+      imgs.length < 3 ? "countdown" : capturePreviewNextState;
     return capturePreviewNext;
   },
   animateStart: (state) => "animateInProgress",
-  animateInProgress: (state) => "print",
+  animateInProgress: (state) => "yetiizeReady",
+  yetiizeReady: (state) => "print",
+  yetiizeStart: (state) => "yetiizeFinish",
+  yetiizeFinish: (state) => "yetiizeReady",
   print: (state) => "ready",
+  noop: (state) => "noop",
 };
 
 const initialState: StateType = {
   imgIndex: 0,
   imgs: [],
   status: "ready",
-  origImgs: []
+  origImgs: [],
+  bgImgs: [],
 };
 
 const buttonPressState: StateType = {
   imgIndex: 0,
   imgs: [],
   status: "countdown",
-  origImgs: []
+  origImgs: [],
+  bgImgs: [],
 };
 
 const getNextStatus = ({
@@ -59,52 +82,85 @@ const getNextStatus = ({
 }: {
   currentState: StateType;
 }): StatusType => {
-  console.group("usePhotoboothState getNextStatus");
+  // console.group("usePhotoboothState getNextStatus");
   const { status } = currentState;
 
   const nextStatus = statusMap[status](currentState);
 
   console.log(`currentStatus: ${status} | nextStatus: ${nextStatus}`);
 
-  console.groupEnd();
+  // console.groupEnd();
   return nextStatus;
 };
 
 function reducer(state: StateType, action: ActionType): StateType {
-  console.group("usePhotoboothState reducer");
+  // console.group("usePhotoboothState reducer");
   console.log({ action, state });
-  const { imgs, status } = state;
+  const { imgs } = state;
   switch (action.type) {
     case "captureImg":
-      console.log("captureImg");
-      const { payload } = action;
-      const newImgs = [...imgs, payload];
+      // console.log("captureImg");
+      const { payload: payloadCaptureImg } = action;
+      const newImgs = [...imgs, payloadCaptureImg];
+      const newBgImgs = newImgs.map(() => "");
 
-      console.groupEnd();
-      return { ...state, imgs: newImgs, origImgs: newImgs };
+      // console.groupEnd();
+      return { ...state, imgs: newImgs, origImgs: newImgs, bgImgs: newBgImgs };
+    case "yetiizeStart":
+      return { ...state, status: "yetiizeStart" };
+    case "yetiizeFinish":
+      // console.log("nextState");
+      const nextStatusYetiizeFinish = getNextStatus({
+        currentState: state,
+      });
 
+      const { payload: payloadYetiizeFinish } = action;
+      const { index, imgSrc } = payloadYetiizeFinish;
+      const bgImgs = [...state.bgImgs];
+      bgImgs[index] = imgSrc;
+
+      // TODO JTE slice this
+      const newYetiizeImgs = [...state.imgs] as Array<string>;
+      if (bgImgs[index] !== null) {
+        newYetiizeImgs[index] = bgImgs[index] as string;
+      }
+
+      // console.groupEnd();
+      return {
+        ...state,
+        status: nextStatusYetiizeFinish,
+        bgImgs: bgImgs,
+        imgs: newYetiizeImgs,
+      };
     case "nextState":
-      console.log("nextState");
+      // console.log("nextState");
       const nextStatus = getNextStatus({
         currentState: state,
       });
 
-      console.groupEnd();
+      // console.groupEnd();
       return { ...state, status: nextStatus };
 
     default:
-      console.groupEnd();
+      // console.groupEnd();
       return state;
   }
 }
 
 export default function usePhotoboothState({
   startAnimation,
+  animationStatus,
 }: {
   startAnimation: () => void;
+  animationStatus: AnimationStatusType;
 }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { status: statusRaw, imgs: imgsRaw } = state;
+  const {
+    status: statusRaw,
+    imgs: imgsRaw,
+    origImgs: origImgsRaw,
+    bgImgs: bgImgsRaw,
+  } = state;
 
   const transitionState = useCallback(() => {
     dispatch({ type: "nextState" });
@@ -117,10 +173,24 @@ export default function usePhotoboothState({
     [dispatch]
   );
 
+  const yetiizeStart = useCallback(() => {
+    dispatch({ type: "yetiizeStart" });
+  }, [dispatch]);
+
+  const yetiizeFinish = useCallback(
+    (imgSrc: string, index: number) => {
+      dispatch({ type: "yetiizeFinish", payload: { imgSrc, index } });
+    },
+    [dispatch]
+  );
+
   const status = useMemo(() => statusRaw, [statusRaw]);
   const imgs = useMemo(() => imgsRaw, [imgsRaw]);
+  const origImgs = useMemo(() => origImgsRaw, [origImgsRaw]);
+  const bgImgs = useMemo(() => bgImgsRaw, [bgImgsRaw]);
 
   useEffect(() => {
+    console.log({ status, animationStatus });
     const ids: Array<NodeJS.Timeout> = [];
 
     if (status === "captureFlash") {
@@ -139,8 +209,13 @@ export default function usePhotoboothState({
       );
     }
 
-    if (status === "animateStart") {
+    if (status === "animateStart" && animationStatus === "ready") {
+      console.log("starting animation");
       startAnimation();
+      transitionState();
+    }
+
+    if (status === "animateInProgress" && animationStatus === "finished") {
       transitionState();
     }
 
@@ -151,7 +226,16 @@ export default function usePhotoboothState({
         }
       });
     };
-  }, [status]);
+  }, [status, animationStatus]);
 
-  return { status, imgs, transitionState, captureImg };
+  return {
+    status,
+    imgs,
+    origImgs,
+    bgImgs,
+    transitionState,
+    captureImg,
+    yetiizeFinish,
+    yetiizeStart,
+  };
 }

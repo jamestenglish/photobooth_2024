@@ -1,5 +1,5 @@
-import { useSpring, easings } from "@react-spring/web";
-import { useCallback, useRef } from "react";
+import { useSpring, easings, useSpringRef } from "@react-spring/web";
+import { useCallback, useRef, useState } from "react";
 import {
   MAX_HEIGHT_START_RM,
   MAX_HEIGHT_TARGET_RM,
@@ -8,12 +8,19 @@ import {
   ANIMATION_DURATION_MS,
 } from "~/constants";
 
+export type AnimationStatusType = "ready" | "running" | "finished";
 export default function useAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [animationStatus, setAnimationStatus] =
+    useState<AnimationStatusType>("ready");
 
   const previousCapturesContainerRef = useRef<HTMLDivElement>(null);
 
+  const webcamDisplayRef = useRef<HTMLDivElement>(null);
+  // const springRef = useSpringRef();
+
   const [_props, api] = useSpring(() => ({
+    // ref: springRef,
     config: {
       easing: easings.easeInCubic,
       duration: ANIMATION_DURATION_MS,
@@ -22,9 +29,11 @@ export default function useAnimation() {
       scrollY: 0,
       maxHeight: MAX_HEIGHT_START_RM,
       columnGap: COLUMN_GAP_START_RM,
+      height: 0,
     },
     onChange: (result, spring, item) => {
-      containerRef?.current?.scroll(0, result.value.scrollY);
+      // console.log({ value: result.value });
+      // containerRef?.current?.scroll(0, result.value.scrollY);
       if (
         previousCapturesContainerRef?.current?.style.columnGap !== undefined
       ) {
@@ -40,20 +49,67 @@ export default function useAnimation() {
           img.style.maxHeight = `${result.value.maxHeight}rem`;
         });
       }
+
+      if (webcamDisplayRef?.current?.style !== undefined) {
+        webcamDisplayRef.current.style.marginTop = `${result.value.height}px`;
+      }
+    },
+    // onResolve: () => {
+    //   console.log(`onResolve: ${new Date()}`);
+
+    //   setAnimationStatus("ready");
+    // },
+    onRest: () => {
+      console.log(`onRest: ${new Date()}`);
+      setAnimationStatus("finished");
+    },
+  }));
+  const finishRef = useSpringRef();
+
+  useSpring(() => ({
+    ref: finishRef,
+    config: {
+      easing: easings.easeInCubic,
+      duration: 1,
+    },
+    from: {
+      scrollY: 0,
+      maxHeight: MAX_HEIGHT_START_RM,
+      columnGap: COLUMN_GAP_START_RM,
+      height: 0,
+    },
+    onStart: () => {
+      console.log(`secondOnStart: ${new Date()}`);
     },
   }));
 
   const startAnimation = useCallback(() => {
+    setAnimationStatus("running");
     const top =
       previousCapturesContainerRef?.current?.getBoundingClientRect()?.top ?? 0;
+    const height =
+      webcamDisplayRef?.current?.getBoundingClientRect()?.height ?? 0;
+
+    console.log(`startAnimation: ${new Date()}`);
+
     api.start({
       to: {
         scrollY: top,
+        height: -height,
         columnGap: COLUMN_GAP_TARGET_RM,
         maxHeight: MAX_HEIGHT_TARGET_RM,
       },
+      // from: {
+      //   height,
+      // },
     });
-  }, [api]);
+  }, [api, setAnimationStatus]);
 
-  return { containerRef, previousCapturesContainerRef, startAnimation };
+  return {
+    containerRef,
+    previousCapturesContainerRef,
+    animationStatus,
+    startAnimation,
+    webcamDisplayRef,
+  };
 }
