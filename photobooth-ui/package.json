@@ -19,7 +19,6 @@
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-full-screen": "^1.1.1",
     "react-webcam": "^7.2.0"
   },
   "devDependencies": {

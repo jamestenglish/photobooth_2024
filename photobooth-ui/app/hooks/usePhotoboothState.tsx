@@ -69,14 +69,6 @@ const initialState: StateType = {
   bgImgs: [],
 };
 
-const buttonPressState: StateType = {
-  imgIndex: 0,
-  imgs: [],
-  status: "countdown",
-  origImgs: [],
-  bgImgs: [],
-};
-
 const getNextStatus = ({
   currentState,
 }: {

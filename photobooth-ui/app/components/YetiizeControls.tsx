@@ -1,12 +1,5 @@
-import WebCamDisplay from "./WebCamDisplay";
-
-import PreviousCaptures from "./PreviousCaptures";
-import { SCREEN_WIDTH, SCREEN_HEIGHT, YETIIZE_STATUSES } from "~/constants";
-import {
-  useAnimationRefs,
-  usePhotoboothImages,
-  usePhotoboothStatus,
-} from "./PhotoboothStateProvider";
+import { YETIIZE_STATUSES } from "~/constants";
+import { usePhotoboothStatus } from "./PhotoboothStateProvider";
 import YetiizeCaptures from "./YetiizeCaptures";
 
 export default function PhotoboothControls() {
@@ -16,7 +9,6 @@ export default function PhotoboothControls() {
 
   return (
     <>
-      {" "}
       {areControlsPresent && (
         <div
           className="col-start-1 col-span-3 row-start-1 row-span-3 items-center align-middle"

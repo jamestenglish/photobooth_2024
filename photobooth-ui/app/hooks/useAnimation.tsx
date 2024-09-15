@@ -17,10 +17,8 @@ export default function useAnimation() {
   const previousCapturesContainerRef = useRef<HTMLDivElement>(null);
 
   const webcamDisplayRef = useRef<HTMLDivElement>(null);
-  // const springRef = useSpringRef();
 
   const [_props, api] = useSpring(() => ({
-    // ref: springRef,
     config: {
       easing: easings.easeInCubic,
       duration: ANIMATION_DURATION_MS,

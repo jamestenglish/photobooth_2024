@@ -112,5 +112,3 @@ export default function YetiizeCaptureContainer({
     </div>
   );
 }
-
-//yeti-10 not great

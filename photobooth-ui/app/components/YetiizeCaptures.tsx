@@ -6,8 +6,8 @@ export default function YetiizeCaptures() {
 
   const imgTags = imgs.map((src, index) => {
     const bgImg = bgImgs[index];
-    // normally index's are bad keys but this won't be reordered
 
+    // normally index's are bad keys but this won't be reordered
     return (
       <YetiizeCaptureContainer
         key={index}
