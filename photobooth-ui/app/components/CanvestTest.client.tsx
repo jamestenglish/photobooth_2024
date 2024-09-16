@@ -1,4 +1,11 @@
-import { useLayoutEffect, useCallback, useState, useRef } from "react";
+import {
+  useLayoutEffect,
+  useCallback,
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+} from "react";
 import axios from "axios";
 import { Buffer } from "buffer";
 
@@ -10,8 +17,32 @@ import {
 } from "./PhotoboothStateProvider";
 import { Form } from "@remix-run/react";
 
-const WIDTH = 1200;
-const HEIGHT = 1800;
+/*
+         const w = 566;
+          const h = 426;
+          const x = 18;
+
+          const xOffset = 600;
+
+          const yPosts = [30, 477, 922];
+          */
+const SETTINGS = {
+  WIDTH: 1200,
+  HEIGHT: 1800,
+  PICTURE_WIDTH: 566,
+  PICTURE_HEIGHT: 426,
+  INITIAL_X: 18,
+  X_OFFSET: 600,
+  Y_OFFSETS: [30, 477, 922],
+  SECONDARY_COLOR: "#D5E8F2",
+  PRIMARY_COLOR: "#004681",
+  BG_COLOR: "#F6F5FA",
+  FRAME_WIDTH: 4,
+  TEXT_OUTLINE_WIDTH: 8,
+} as const;
+
+// const WIDTH = 1200;
+// const HEIGHT = 1800;
 
 const fonts = [
   {
@@ -41,7 +72,7 @@ async function loadFonts(fontsToLoad: any) {
       font.style = fontStyle;
       await font.load();
       document.fonts.add(font);
-      console.log(fontFamily, "loaded");
+      // console.log(fontFamily, "loaded");
 
       // apply font styles to body
       let fontDOMEl = document.createElement("div");
@@ -67,6 +98,10 @@ export default function CanvasTest() {
   const { yetiBgIndicies, imgs } = usePhotoboothImages();
   const status = usePhotoboothStatus();
   const [file, setFile] = useState<string>("");
+
+  // const { addTask } = useTaskQueue({ shouldProcess: true });
+
+  const promiseRef = useRef([Promise.resolve()]);
 
   const onClick = useCallback(async () => {
     try {
@@ -114,85 +149,120 @@ export default function CanvasTest() {
       console.error(err);
       console.trace(err);
     }
-  }, [status]);
+  }, [status, ...yetiBgIndicies, ...imgs]);
+
+  const yetiImgs = useMemo(() => {
+    return YETIS.map(() => new Image());
+  }, []);
+
+  const [isStaticLoaded, setIsStaticLoaded] = useState(false);
+  useLayoutEffect(() => {
+    const load = async () => {
+      console.group("static loading");
+      console.log("loading static promises");
+      await loadFonts(fonts);
+
+      const promises = [...yetiImgs].map((img) => {
+        createImageLoadPromise(img);
+      });
+
+      yetiImgs.forEach((img, index) => {
+        img.src = YETIS[index];
+      });
+
+      await Promise.all(promises);
+      console.log("DONE loading static promises");
+      setIsStaticLoaded(true);
+      console.groupEnd();
+    };
+
+    load();
+  }, []);
 
   useLayoutEffect(() => {
     console.log({ length: imgs.length, status, yetiBgIndicies });
-    if (imgs.length === 3) {
+    if (imgs.length === 3 && isStaticLoaded) {
       const draw = async () => {
-        await loadFonts(fonts);
-        const template = new Image(WIDTH, HEIGHT);
+        await Promise.all(promiseRef.current);
+        promiseRef.current = [Promise.resolve()];
+        console.group("draw");
+        console.log({ length: promiseRef.current.length });
+        console.log({ foo: promiseRef.current[0] });
+        console.log("drawing canvas");
+        const template = new Image(SETTINGS.WIDTH, SETTINGS.HEIGHT);
         const templateImgs = [new Image(), new Image(), new Image()];
-        const yetiImgs = YETIS.map(() => new Image());
+        // const yetiImgs = YETIS.map(() => new Image());
 
-        const promises = [template, ...templateImgs, ...yetiImgs].map((img) => {
-          createImageLoadPromise(img);
+        // const promises = [template, ...templateImgs, ...yetiImgs].map((img) => {
+        const promises = [template, ...templateImgs].map((img) => {
+          return createImageLoadPromise(img);
         });
 
         templateImgs.forEach((img, index) => {
           img.src = imgs[index];
         });
 
-        yetiImgs.forEach((img, index) => {
-          img.src = YETIS[index];
-        });
+        // yetiImgs.forEach((img, index) => {
+        //   img.src = YETIS[index];
+        // });
 
         template.src = templateImg;
 
         const canvas = document.getElementById("c") as HTMLCanvasElement;
-        canvas.width = WIDTH;
-        canvas.height = HEIGHT;
+        canvas.width = SETTINGS.WIDTH;
+        canvas.height = SETTINGS.HEIGHT;
         const ctx = canvas.getContext("2d");
         await Promise.all(promises);
 
         if (ctx !== null) {
+          console.log("  ctx not null");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           ctx.drawImage(template, 0, 0);
 
-          const w = 566;
-          const h = 426;
-          const x = 18;
+          // const w = 566;
+          // const h = 426;
+          // const x = 18;
 
-          const xOffset = 600;
+          // const xOffset = 600;
 
-          const yPosts = [30, 477, 922];
+          // const yPosts = [30, 477, 922];
 
-          yPosts.forEach((y, index) => {
-            const yetiImage = yetiImgs[yetiBgIndicies[index]];
+          [0, SETTINGS.X_OFFSET].forEach((offset) => {
+            SETTINGS.Y_OFFSETS.forEach((y, index) => {
+              console.group(`draw loop ${index}`);
+              console.log({
+                templateImgLength: templateImgs[index].src.length,
+              });
+              const yetiImage = yetiImgs[yetiBgIndicies[index]];
 
-            ctx.drawImage(
-              yetiImage,
-              0,
-              0,
-              yetiImage.width,
-              (h / w) * yetiImage.height,
-              x,
-              y,
-              w,
-              h
-            );
-            ctx.drawImage(templateImgs[index], x, y, w, h);
-
-            ctx.drawImage(
-              yetiImage,
-              0,
-              0,
-              yetiImage.width,
-              (h / w) * yetiImage.height,
-              x + xOffset,
-              y,
-              w,
-              h
-            );
-            ctx.drawImage(templateImgs[index], x + xOffset, y, w, h);
+              ctx.drawImage(
+                yetiImage,
+                0,
+                0,
+                yetiImage.width,
+                (SETTINGS.PICTURE_HEIGHT / SETTINGS.PICTURE_WIDTH) *
+                  yetiImage.height,
+                SETTINGS.INITIAL_X + offset,
+                y,
+                SETTINGS.PICTURE_WIDTH,
+                SETTINGS.PICTURE_HEIGHT
+              );
+              ctx.drawImage(
+                templateImgs[index],
+                SETTINGS.INITIAL_X + offset,
+                y,
+                SETTINGS.PICTURE_WIDTH,
+                SETTINGS.PICTURE_HEIGHT
+              );
+              console.groupEnd();
+            });
           });
-
           ctx.font = `normal 700 120px "Mountains of Christmas"`;
           ctx.textAlign = "center";
-          ctx.fillStyle = "#D5E8F2";
-          ctx.strokeStyle = "#004681";
-          ctx.lineWidth = 8;
+          ctx.fillStyle = SETTINGS.SECONDARY_COLOR;
+          ctx.strokeStyle = SETTINGS.PRIMARY_COLOR;
+          ctx.lineWidth = SETTINGS.TEXT_OUTLINE_WIDTH;
           const line1 = import.meta.env.VITE_LINE_1;
           ctx.strokeText(line1, 300, 1480, 598);
           ctx.fillText(line1, 300, 1480, 598);
@@ -220,11 +290,13 @@ export default function CanvasTest() {
           ctx.strokeText(line4, 1010, 1730, 598);
           ctx.fillText(line4, 1010, 1730, 598);
         }
+        console.groupEnd();
       };
 
-      draw();
+      const promise = draw();
+      promiseRef.current.push(promise);
     }
-  }, [imgs, yetiBgIndicies, status]);
+  }, [...imgs, ...yetiBgIndicies, isStaticLoaded]);
 
   return (
     <>
