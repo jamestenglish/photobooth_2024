@@ -11,6 +11,7 @@ import { Buffer } from "buffer";
 
 import { YETIS } from "~/constants";
 import templateImg from "~/images/template.png";
+import snipPng from "~/images/snip.png";
 import {
   usePhotoboothImages,
   usePhotoboothStatus,
@@ -28,7 +29,7 @@ const SETTINGS = {
   SECONDARY_COLOR: "#D5E8F2",
   PRIMARY_COLOR: "#004681",
   BG_COLOR: "#F6F5FA",
-  FRAME_WIDTH: 4,
+  FRAME_WIDTH: 8,
   TEXT_OUTLINE_WIDTH: 8,
 } as const;
 
@@ -174,13 +175,10 @@ export default function CanvasTest() {
         console.log({ length: promiseRef.current.length });
         console.log({ foo: promiseRef.current[0] });
         console.log("drawing canvas");
-        // TODO JTE 1        // const template = new Image(SETTINGS.WIDTH, SETTINGS.HEIGHT);
+        const snipImg = new Image();
         const templateImgs = [new Image(), new Image(), new Image()];
 
-        // TODO JTE 1        // const promises = [template, ...templateImgs].map((img) => {
-        //   return createImageLoadPromise(img);
-        // });
-        const promises = [...templateImgs].map((img) => {
+        const promises = [...templateImgs, snipImg].map((img) => {
           return createImageLoadPromise(img);
         });
 
@@ -188,7 +186,7 @@ export default function CanvasTest() {
           img.src = imgs[index];
         });
 
-        // TODO JTE 1        // template.src = templateImg;
+        snipImg.src = snipPng;
 
         const canvas = document.getElementById("c") as HTMLCanvasElement;
         canvas.width = SETTINGS.WIDTH;
@@ -202,8 +200,7 @@ export default function CanvasTest() {
 
           ctx.fillStyle = SETTINGS.BG_COLOR;
           ctx.fillRect(0, 0, SETTINGS.WIDTH, SETTINGS.HEIGHT);
-
-          // TODO JTE 1          // ctx.drawImage(template, 0, 0);
+          ctx.drawImage(snipImg, 0, 0);
 
           [0, SETTINGS.X_OFFSET].forEach((offset) => {
             SETTINGS.Y_OFFSETS.forEach((y, index) => {
@@ -212,13 +209,15 @@ export default function CanvasTest() {
                 templateImgLength: templateImgs[index].src.length,
               });
 
-              ctx.fillStyle = SETTINGS.PRIMARY_COLOR;
-              ctx.fillRect(
-                SETTINGS.INITIAL_X - SETTINGS.FRAME_WIDTH / 2,
-                y - SETTINGS.FRAME_WIDTH / 2,
+              ctx.lineWidth = SETTINGS.FRAME_WIDTH;
+              ctx.strokeStyle = SETTINGS.PRIMARY_COLOR;
+              ctx.strokeRect(
+                offset + (SETTINGS.INITIAL_X - SETTINGS.FRAME_WIDTH / 4),
+                y - SETTINGS.FRAME_WIDTH / 4,
                 SETTINGS.PICTURE_WIDTH + SETTINGS.FRAME_WIDTH / 2,
                 SETTINGS.PICTURE_HEIGHT + SETTINGS.FRAME_WIDTH / 2
               );
+              // ctx.reset();
 
               const yetiImage = yetiImgs[yetiBgIndicies[index]];
 
