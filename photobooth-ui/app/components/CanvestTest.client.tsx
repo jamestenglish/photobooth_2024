@@ -1,10 +1,14 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useCallback, useState, useRef } from "react";
+import axios from "axios";
+import { Buffer } from "buffer";
+
 import { YETIS } from "~/constants";
 import templateImg from "~/images/template.png";
 import {
   usePhotoboothImages,
   usePhotoboothStatus,
 } from "./PhotoboothStateProvider";
+import { Form } from "@remix-run/react";
 
 const WIDTH = 1200;
 const HEIGHT = 1800;
@@ -62,6 +66,55 @@ const createImageLoadPromise = (img: HTMLImageElement) => {
 export default function CanvasTest() {
   const { yetiBgIndicies, imgs } = usePhotoboothImages();
   const status = usePhotoboothStatus();
+  const [file, setFile] = useState<string>("");
+
+  const onClick = useCallback(async () => {
+    try {
+      const canvas = document.getElementById("c") as HTMLCanvasElement;
+
+      console.log({ canvas });
+      const blob = await new Promise((resolve, reject) =>
+        canvas.toBlob((blob) => (blob ? resolve(blob) : reject()), "image/png")
+      );
+      console.log({ blob });
+      setFile(canvas.toDataURL("image/jpeg"));
+
+      // // @ts-ignore
+      // const processedFile = new File([blob], `bg-blasted.png`, {
+      //   type: "image/png",
+      // });
+
+      // const data = await processedFile.arrayBuffer();
+
+      // console.log({ data });
+
+      // const url = "http://10.0.0.145:631/ipp/printer";
+      // const printer = new Printer(url);
+      // const msg = {
+      //   "operation-attributes-tag": {
+      //     "document-format": "image/png",
+      //   },
+      //   data: Buffer.from(data),
+      // };
+
+      // console.log("axios");
+      // axios
+      //   .post(url, printer.encodeMsg("Print-Job", msg), {
+      //     responseType: "arraybuffer",
+      //     headers: printer.getHeaders(),
+      //   })
+      //   .then((response: any) => {
+      //     console.log(printer.decodeMsg(response.data));
+      //   })
+      //   .catch((err) => {
+      //     console.error(err);
+      //     console.trace(err);
+      //   });
+    } catch (err) {
+      console.error(err);
+      console.trace(err);
+    }
+  }, [status]);
 
   useLayoutEffect(() => {
     console.log({ length: imgs.length, status, yetiBgIndicies });
@@ -107,6 +160,7 @@ export default function CanvasTest() {
 
           yPosts.forEach((y, index) => {
             const yetiImage = yetiImgs[yetiBgIndicies[index]];
+
             ctx.drawImage(
               yetiImage,
               0,
@@ -172,5 +226,37 @@ export default function CanvasTest() {
     }
   }, [imgs, yetiBgIndicies, status]);
 
-  return <></>;
+  return (
+    <>
+      <Form
+        key="1234"
+        id="contact-form"
+        method="post"
+        // encType="multipart/form-data"
+      >
+        <p>
+          <span>Name</span>
+          <input
+            defaultValue={file}
+            aria-label="First name"
+            name="first"
+            type="hidden"
+          />
+          {/* <input ref={fileRef} type="file" /> */}
+        </p>
+        <button
+          className="inline-flex items-center my-12 text-6xl bg-transparent  text-dkblue py-4 px-6 border-4 border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+          type="submit"
+        >
+          New
+        </button>
+      </Form>
+      <button
+        className="inline-flex items-center my-12 text-6xl bg-transparent  text-dkblue py-4 px-6 border-4 border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+        onClick={onClick}
+      >
+        test
+      </button>
+    </>
+  );
 }

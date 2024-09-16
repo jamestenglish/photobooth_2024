@@ -16,10 +16,16 @@
     "@remix-run/node": "^2.11.2",
     "@remix-run/react": "^2.11.2",
     "@remix-run/serve": "^2.11.2",
+    "@sealsystems/ipp": "^2.8.2",
+    "axios": "^1.7.7",
+    "buffer": "^6.0.3",
+    "i": "^0.3.7",
     "isbot": "^4.1.0",
+    "npm": "^10.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-webcam": "^7.2.0"
+    "react-webcam": "^7.2.0",
+    "virtual-printer": "^1.0.17"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.11.2",

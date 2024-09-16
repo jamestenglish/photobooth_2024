@@ -10,7 +10,7 @@ import {
 } from "./PhotoboothStateProvider";
 import YetiizeLoading from "./YetiizeLoading";
 import YetiizeControls from "./YetiizeControls";
-import CanvasTest from "./CanvestTest";
+import CanvasTest from "./CanvestTest.client";
 
 export default function Photobooth() {
   const { photoboothStateDispatch } = usePhotoboothStateMethods();
