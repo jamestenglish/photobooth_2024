@@ -2,7 +2,7 @@ import Countdowner from "./Countdowner";
 import Flash from "./Flash";
 import CapturePreview from "./CapturePreview";
 import PhotoboothControls from "./PhotoboothControls";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "~/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT, YETIIZE_STATUSES } from "~/constants";
 import {
   usePhotoboothImages,
   usePhotoboothStateMethods,
@@ -10,21 +10,18 @@ import {
 } from "./PhotoboothStateProvider";
 import YetiizeLoading from "./YetiizeLoading";
 import YetiizeControls from "./YetiizeControls";
+import CanvasTest from "./CanvestTest";
 
 export default function Photobooth() {
-  const { captureImg, transitionState } = usePhotoboothStateMethods();
+  const { photoboothStateDispatch } = usePhotoboothStateMethods();
   const { imgs } = usePhotoboothImages();
 
   const status = usePhotoboothStatus();
 
-  const onButtonPress = transitionState;
-
   const onCapture = (imgSrc: string) => {
-    captureImg(imgSrc);
-    transitionState();
+    photoboothStateDispatch({ type: "captureImg", payload: imgSrc });
+    photoboothStateDispatch({ type: "nextStatus" });
   };
-
-  const onCountdownFinished = transitionState;
 
   const lastImg = imgs.length > 0 ? imgs[imgs.length - 1] : undefined;
 
@@ -38,7 +35,7 @@ export default function Photobooth() {
           maxWidth: `${SCREEN_WIDTH}px`,
           border: "2px solid purple",
         }}
-        className="overflow-hidden"
+        className="overflow-hidden bg-snow"
       >
         <div
           className="grid grid-cols-3 grid-rows-3"
@@ -51,15 +48,12 @@ export default function Photobooth() {
         >
           <Flash />
 
-          <Countdowner onCountdownFinished={onCountdownFinished} />
+          <Countdowner />
 
           <YetiizeLoading />
           <CapturePreview lastImg={lastImg} />
 
-          <PhotoboothControls
-            onButtonPress={onButtonPress}
-            onCapture={onCapture}
-          />
+          <PhotoboothControls onCapture={onCapture} />
 
           <YetiizeControls />
         </div>
@@ -75,6 +69,12 @@ export default function Photobooth() {
       </div>
       <div>
         <div className="whitespace-pre">status: {status}</div>
+      </div>
+      {YETIIZE_STATUSES.includes(status) && <CanvasTest />}
+      <div className="flex">
+        <div>
+          Canvas:<canvas style={{ border: "1px solid green" }} id="c"></canvas>
+        </div>
       </div>
     </>
   );

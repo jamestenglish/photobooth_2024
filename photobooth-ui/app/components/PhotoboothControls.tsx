@@ -8,13 +8,12 @@ import {
 } from "./PhotoboothStateProvider";
 
 export default function PhotoboothControls({
-  onButtonPress,
   onCapture,
 }: {
-  onButtonPress: () => void;
   onCapture: (imgSrc: string) => void;
 }) {
   const status = usePhotoboothStatus();
+
   const { webcamDisplayRef, previousCapturesContainerRef, containerRef } =
     useAnimationRefs();
 
@@ -37,11 +36,7 @@ export default function PhotoboothControls({
               ref={webcamDisplayRef}
               className={`${areControlsVisible ? "" : "hidden"} flex items-center flex-col mx-auto gap-y-2`}
             >
-              <WebCamDisplay
-                onButtonPress={onButtonPress}
-                onCapture={onCapture}
-                status={status}
-              />
+              <WebCamDisplay onCapture={onCapture} status={status} />
             </div>
 
             <div

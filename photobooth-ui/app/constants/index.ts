@@ -42,7 +42,7 @@ export const FLASH_TIME_IN_MS = 200;
 
 // export const FLASH_TIME_IN_MS = 20000;
 // export const PREVIEW_TIME_IN_MS = 3000;
-export const PREVIEW_TIME_IN_MS = 3000;
+export const PREVIEW_TIME_IN_MS = 500;
 
 export const MAX_HEIGHT_TARGET_RM = 26;
 export const MAX_HEIGHT_START_RM = 12;
@@ -58,5 +58,8 @@ export const YETIIZE_STATUSES = [
   "yetiizeReady",
   "yetiizeStart",
   "yetiizeFinish",
+  "shuffleYetiBgIndex",
+  "setOrigImg",
+  "setBgImg",
   "print",
 ];

@@ -5,7 +5,7 @@ export default function YetiizeCaptures() {
   const { imgs, bgImgs } = usePhotoboothImages();
 
   const imgTags = imgs.map((src, index) => {
-    const bgImg = bgImgs[index];
+    const bgImgSrc = bgImgs[index];
 
     // normally index's are bad keys but this won't be reordered
     return (
@@ -13,7 +13,7 @@ export default function YetiizeCaptures() {
         key={index}
         src={src}
         index={index}
-        bgImg={bgImg}
+        bgImgSrc={bgImgSrc}
       />
     );
   });

@@ -1,18 +1,19 @@
 import { createContext, useContext, useReducer, useMemo } from "react";
-import usePhotoboothState, { StatusType } from "~/hooks/usePhotoboothState";
+import usePhotoboothState, {
+  ActionsType,
+  StatusType,
+} from "~/hooks/usePhotoboothState";
 import { AnimationStatusType } from "~/hooks/useAnimation";
 
 export type PhotoboothMethodsType = {
-  transitionState: () => void;
-  captureImg: (imgSrc: string) => void;
-  yetiizeFinish: (imgSrc: string, index: number) => void;
-  yetiizeStart: () => void;
+  photoboothStateDispatch: React.Dispatch<ActionsType>;
 };
 
 export type PhotoboothImagesType = {
   imgs: Array<string>;
   origImgs: Array<string>;
   bgImgs: Array<string>;
+  yetiBgIndicies: Array<number>;
 };
 
 export type PhotoboothAnimationRefsType = {
@@ -54,10 +55,8 @@ export default function PhotoboothStateProvider({
     imgs,
     origImgs,
     bgImgs,
-    transitionState,
-    captureImg,
-    yetiizeFinish,
-    yetiizeStart,
+    yetiBgIndicies,
+    photoboothStateDispatch,
   } = usePhotoboothState({
     startAnimation,
     animationStatus,
@@ -65,10 +64,10 @@ export default function PhotoboothStateProvider({
 
   // I don't really think this is necessary
   const methodsValue = useMemo(() => {
-    return { transitionState, captureImg, yetiizeFinish, yetiizeStart };
-  }, [transitionState, captureImg, yetiizeFinish, yetiizeStart]);
+    return { photoboothStateDispatch };
+  }, [photoboothStateDispatch]);
 
-  const imgsValue = { imgs, origImgs, bgImgs };
+  const imgsValue = { imgs, origImgs, bgImgs, yetiBgIndicies };
   const animationRefs = {
     containerRef,
     previousCapturesContainerRef,

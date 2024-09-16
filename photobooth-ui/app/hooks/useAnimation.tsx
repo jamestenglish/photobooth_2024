@@ -29,9 +29,7 @@ export default function useAnimation() {
       columnGap: COLUMN_GAP_START_RM,
       height: 0,
     },
-    onChange: (result, spring, item) => {
-      // console.log({ value: result.value });
-      // containerRef?.current?.scroll(0, result.value.scrollY);
+    onChange: (result) => {
       if (
         previousCapturesContainerRef?.current?.style.columnGap !== undefined
       ) {
@@ -52,11 +50,11 @@ export default function useAnimation() {
         webcamDisplayRef.current.style.marginTop = `${result.value.height}px`;
       }
     },
-    // onResolve: () => {
-    //   console.log(`onResolve: ${new Date()}`);
+    onResolve: () => {
+      console.log(`onResolve: ${new Date()}`);
 
-    //   setAnimationStatus("ready");
-    // },
+      // setAnimationStatus("ready");
+    },
     onRest: () => {
       console.log(`onRest: ${new Date()}`);
       setAnimationStatus("finished");
@@ -97,9 +95,6 @@ export default function useAnimation() {
         columnGap: COLUMN_GAP_TARGET_RM,
         maxHeight: MAX_HEIGHT_TARGET_RM,
       },
-      // from: {
-      //   height,
-      // },
     });
   }, [api, setAnimationStatus]);
 

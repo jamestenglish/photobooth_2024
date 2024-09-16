@@ -1,5 +1,5 @@
 import { usePhotoboothStatus } from "./PhotoboothStateProvider";
-import yetiThinking from "~/images/yeti-thinking-1.png";
+import yetiThinking from "~/images/yeti-thinking-1-big.png";
 
 export default function YetiizeLoading() {
   const status = usePhotoboothStatus();
@@ -10,10 +10,7 @@ export default function YetiizeLoading() {
 
   return (
     <>
-      <div
-        // style={{ maxWidth: `${SCREEN_WIDTH}px` }}
-        className="items-center justify-items-center justify-center col-start-1 row-start-1 row-span-3 col-span-3 z-10 bg-white"
-      >
+      <div className="items-center justify-items-center justify-center col-start-1 row-start-1 row-span-3 col-span-3 z-10 bg-white">
         <img
           className="object-scale-down rounded-3xl w-full h-full"
           src={yetiThinking}

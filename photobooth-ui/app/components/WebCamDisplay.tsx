@@ -3,55 +3,50 @@ import Webcam from "react-webcam";
 import { StatusType } from "~/hooks/usePhotoboothState";
 import { WEBCAM_HEIGHT, WEBCAM_WIDTH } from "~/constants";
 import icon4 from "~/images/yeti-camera-icon-4-removebg-preview.png";
+import { usePhotoboothStateMethods } from "./PhotoboothStateProvider";
 
 export default function WebCamDisplay({
-  onButtonPress,
   onCapture,
   status,
 }: {
-  onButtonPress: () => void;
   onCapture: (imgSrc: string) => void;
   status: StatusType;
 }) {
   const webcamRef = useRef<Webcam>(null);
+  const { photoboothStateDispatch } = usePhotoboothStateMethods();
 
   useEffect(() => {
-    console.group("WebCamDisplay useEffect");
     if (status === "capture") {
-      console.log(`status is capture`);
       if (webcamRef.current !== null) {
-        console.log(`  has ref`);
-
         const screenshot = webcamRef.current.getScreenshot();
-        console.log(`    screenshot: ${screenshot}`);
 
         if (screenshot !== null) {
-          console.log("calling callback");
           onCapture(screenshot);
         }
       }
     }
-    console.groupEnd();
   });
 
   const capture = useCallback(() => {
-    onButtonPress();
+    photoboothStateDispatch({ type: "nextStatus" });
   }, []);
 
   return (
     <>
-      <Webcam
-        height={WEBCAM_HEIGHT}
-        width={WEBCAM_WIDTH}
-        ref={webcamRef}
-        screenshotFormat="image/jpeg"
-        screenshotQuality={1}
-        mirrored={true}
-      />
+      <div className="border-dkblue border-4 min-h-[571px]">
+        <Webcam
+          height={WEBCAM_HEIGHT}
+          width={WEBCAM_WIDTH}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          screenshotQuality={1}
+          mirrored={true}
+        />
+      </div>
 
       {status === "ready" && (
         <button
-          className="inline-flex items-center my-12 text-6xl bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-4 px-6 border-4 border-blue-500 hover:border-transparent rounded-full"
+          className="inline-flex items-center my-12 text-6xl bg-transparent  text-dkblue py-4 px-6 border-4 border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
           onClick={capture}
         >
           <img

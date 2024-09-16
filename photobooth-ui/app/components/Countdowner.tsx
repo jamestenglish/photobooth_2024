@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { StatusType } from "~/hooks/usePhotoboothState";
-import { SCREEN_WIDTH, COUNTDOWN_TIME_IN_MS } from "~/constants";
-import { usePhotoboothStatus } from "./PhotoboothStateProvider";
+import { COUNTDOWN_TIME_IN_MS } from "~/constants";
+import {
+  usePhotoboothStateMethods,
+  usePhotoboothStatus,
+} from "./PhotoboothStateProvider";
 
-export default function Countdowner({
-  onCountdownFinished,
-}: {
-  onCountdownFinished: () => void;
-}) {
+export default function Countdowner() {
   const status = usePhotoboothStatus();
+  const { photoboothStateDispatch } = usePhotoboothStateMethods();
 
   const [countdown, setCountdown] = useState<number>(3);
 
@@ -18,7 +17,7 @@ export default function Countdowner({
       id = setTimeout(() => {
         const newCountdown = countdown - 1;
         if (newCountdown === 0) {
-          onCountdownFinished();
+          photoboothStateDispatch({ type: "nextStatus" });
           setCountdown(3);
         } else {
           setCountdown(newCountdown);
@@ -30,7 +29,7 @@ export default function Countdowner({
         clearTimeout(id);
       }
     };
-  }, [status, countdown, onCountdownFinished]);
+  }, [status, countdown, photoboothStateDispatch]);
 
   if (status !== "countdown") {
     return <></>;

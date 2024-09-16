@@ -24,7 +24,3 @@ export default function PhotoboothControls() {
     </>
   );
 }
-
-// max-height: 26rem;
-// column-gap: 0.5rem;
-// 1.5rem margin
