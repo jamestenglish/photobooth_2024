@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect, Dispatch, useCallback } from "react";
-import { processImage } from "./process.client";
+import { processImage } from "../helpers/process.client";
 import {
   usePhotoboothImages,
   usePhotoboothStateMethods,
   usePhotoboothStatus,
-} from "./PhotoboothStateProvider";
+} from "~/features/photobooth-state/components/PhotoboothStateProvider";
 import { YETIS } from "~/constants";
 import icon1 from "~/images/yeti-cameria-icon-1-removebg-preview.png";
 import icon2 from "~/images/yeti-camera-icon-2-removebg-preview.png";
@@ -13,7 +13,7 @@ import icon3 from "~/images/yeti-camera-icon-3-removebg-preview.png";
 import sadIcon1 from "~/images/sad-yeti-icon-1.png";
 import sadIcon2 from "~/images/sad-yeti-icon-2.png";
 import sadIcon3 from "~/images/sad-yeti-icon-3.png";
-import { ActionsType } from "~/hooks/usePhotoboothState";
+import { ActionsType } from "~/features/photobooth-state/hooks/usePhotoboothState";
 
 const icons = [icon1, icon2, icon3];
 const sadIcons = [sadIcon1, sadIcon2, sadIcon3];

@@ -2,8 +2,8 @@ import { createContext, useContext, useReducer, useMemo } from "react";
 import usePhotoboothState, {
   ActionsType,
   StatusType,
-} from "~/hooks/usePhotoboothState";
-import { AnimationStatusType } from "~/hooks/useAnimation";
+} from "~/features/photobooth-state/hooks/usePhotoboothState";
+import { AnimationStatusType } from "~/features/photobooth-state/hooks/useAnimation";
 
 export type PhotoboothMethodsType = {
   photoboothStateDispatch: React.Dispatch<ActionsType>;

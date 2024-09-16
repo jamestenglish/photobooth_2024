@@ -1,6 +1,6 @@
-import Photobooth from "./Photobooth";
+import Photobooth from "~/features/photobooth/components/Photobooth";
 import PhotoboothStateProvider from "./PhotoboothStateProvider";
-import useAnimation from "~/hooks/useAnimation";
+import useAnimation from "~/features/photobooth-state/hooks/useAnimation";
 
 export default function PhotoboothContainer() {
   const {

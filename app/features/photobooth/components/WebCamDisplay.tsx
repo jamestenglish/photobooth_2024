@@ -1,9 +1,9 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
-import { StatusType } from "~/hooks/usePhotoboothState";
+import { StatusType } from "~/features/photobooth-state/hooks/usePhotoboothState";
 import { WEBCAM_HEIGHT, WEBCAM_WIDTH } from "~/constants";
 import icon4 from "~/images/yeti-camera-icon-4-removebg-preview.png";
-import { usePhotoboothStateMethods } from "./PhotoboothStateProvider";
+import { usePhotoboothStateMethods } from "~/features/photobooth-state/components/PhotoboothStateProvider";
 
 export default function WebCamDisplay({
   onCapture,

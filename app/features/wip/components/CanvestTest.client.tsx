@@ -14,7 +14,7 @@ import templateImg from "~/images/template.png";
 import {
   usePhotoboothImages,
   usePhotoboothStatus,
-} from "./PhotoboothStateProvider";
+} from "~/features/photobooth-state/components/PhotoboothStateProvider";
 import { Form } from "@remix-run/react";
 
 const SETTINGS = {
@@ -174,10 +174,13 @@ export default function CanvasTest() {
         console.log({ length: promiseRef.current.length });
         console.log({ foo: promiseRef.current[0] });
         console.log("drawing canvas");
-        const template = new Image(SETTINGS.WIDTH, SETTINGS.HEIGHT);
+        // TODO JTE 1        // const template = new Image(SETTINGS.WIDTH, SETTINGS.HEIGHT);
         const templateImgs = [new Image(), new Image(), new Image()];
 
-        const promises = [template, ...templateImgs].map((img) => {
+        // TODO JTE 1        // const promises = [template, ...templateImgs].map((img) => {
+        //   return createImageLoadPromise(img);
+        // });
+        const promises = [...templateImgs].map((img) => {
           return createImageLoadPromise(img);
         });
 
@@ -185,7 +188,7 @@ export default function CanvasTest() {
           img.src = imgs[index];
         });
 
-        template.src = templateImg;
+        // TODO JTE 1        // template.src = templateImg;
 
         const canvas = document.getElementById("c") as HTMLCanvasElement;
         canvas.width = SETTINGS.WIDTH;
@@ -197,7 +200,10 @@ export default function CanvasTest() {
           console.log("  ctx not null");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-          ctx.drawImage(template, 0, 0);
+          ctx.fillStyle = SETTINGS.BG_COLOR;
+          ctx.fillRect(0, 0, SETTINGS.WIDTH, SETTINGS.HEIGHT);
+
+          // TODO JTE 1          // ctx.drawImage(template, 0, 0);
 
           [0, SETTINGS.X_OFFSET].forEach((offset) => {
             SETTINGS.Y_OFFSETS.forEach((y, index) => {
@@ -205,6 +211,15 @@ export default function CanvasTest() {
               console.log({
                 templateImgLength: templateImgs[index].src.length,
               });
+
+              ctx.fillStyle = SETTINGS.PRIMARY_COLOR;
+              ctx.fillRect(
+                SETTINGS.INITIAL_X - SETTINGS.FRAME_WIDTH / 2,
+                y - SETTINGS.FRAME_WIDTH / 2,
+                SETTINGS.PICTURE_WIDTH + SETTINGS.FRAME_WIDTH / 2,
+                SETTINGS.PICTURE_HEIGHT + SETTINGS.FRAME_WIDTH / 2
+              );
+
               const yetiImage = yetiImgs[yetiBgIndicies[index]];
 
               ctx.drawImage(

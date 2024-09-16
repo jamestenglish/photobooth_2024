@@ -1,5 +1,5 @@
 import YetiizeCaptureContainer from "./YetiizeCaptureContainer";
-import { usePhotoboothImages } from "./PhotoboothStateProvider";
+import { usePhotoboothImages } from "~/features/photobooth-state/components/PhotoboothStateProvider";
 
 export default function YetiizeCaptures() {
   const { imgs, bgImgs } = usePhotoboothImages();

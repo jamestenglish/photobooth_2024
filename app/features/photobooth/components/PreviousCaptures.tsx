@@ -1,5 +1,5 @@
 import PreviousCaptureContainer from "./PreviousCaptureContainer";
-import { usePhotoboothImages } from "./PhotoboothStateProvider";
+import { usePhotoboothImages } from "~/features/photobooth-state/components/PhotoboothStateProvider";
 
 export default function PreviousCaptures() {
   const { imgs } = usePhotoboothImages();

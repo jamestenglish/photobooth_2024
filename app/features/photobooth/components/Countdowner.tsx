@@ -3,7 +3,7 @@ import { COUNTDOWN_TIME_IN_MS } from "~/constants";
 import {
   usePhotoboothStateMethods,
   usePhotoboothStatus,
-} from "./PhotoboothStateProvider";
+} from "~/features/photobooth-state/components/PhotoboothStateProvider";
 
 export default function Countdowner() {
   const status = usePhotoboothStatus();

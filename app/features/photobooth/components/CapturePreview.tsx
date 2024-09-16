@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { usePhotoboothStatus } from "./PhotoboothStateProvider";
+import { usePhotoboothStatus } from "~/features/photobooth-state/components/PhotoboothStateProvider";
 
 import yetiLove1 from "~/images/yeti-love-1-removebg-preview.png";
 import yetiLove2 from "~/images/yeti-love-2-removebg-preview.png";

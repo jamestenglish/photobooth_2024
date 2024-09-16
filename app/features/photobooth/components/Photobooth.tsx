@@ -7,10 +7,10 @@ import {
   usePhotoboothImages,
   usePhotoboothStateMethods,
   usePhotoboothStatus,
-} from "./PhotoboothStateProvider";
-import YetiizeLoading from "./YetiizeLoading";
-import YetiizeControls from "./YetiizeControls";
-import CanvasTest from "./CanvestTest.client";
+} from "~/features/photobooth-state/components/PhotoboothStateProvider";
+import YetiizeLoading from "~/features/yetiize/components/YetiizeLoading";
+import YetiizeControls from "~/features/yetiize/components/YetiizeControls";
+import CanvasTest from "~/features/wip/components/CanvestTest.client";
 
 export default function Photobooth() {
   const { photoboothStateDispatch } = usePhotoboothStateMethods();

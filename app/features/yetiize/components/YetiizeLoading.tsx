@@ -1,4 +1,4 @@
-import { usePhotoboothStatus } from "./PhotoboothStateProvider";
+import { usePhotoboothStatus } from "~/features/photobooth-state/components/PhotoboothStateProvider";
 import yetiThinking from "~/images/yeti-thinking-1-big.png";
 
 export default function YetiizeLoading() {

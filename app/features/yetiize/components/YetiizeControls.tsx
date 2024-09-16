@@ -1,5 +1,5 @@
 import { YETIIZE_STATUSES } from "~/constants";
-import { usePhotoboothStatus } from "./PhotoboothStateProvider";
+import { usePhotoboothStatus } from "~/features/photobooth-state/components/PhotoboothStateProvider";
 import YetiizeCaptures from "./YetiizeCaptures";
 
 export default function PhotoboothControls() {

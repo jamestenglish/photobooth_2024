@@ -5,7 +5,7 @@ import { YETIIZE_STATUSES } from "~/constants";
 import {
   useAnimationRefs,
   usePhotoboothStatus,
-} from "./PhotoboothStateProvider";
+} from "~/features/photobooth-state/components/PhotoboothStateProvider";
 
 export default function PhotoboothControls({
   onCapture,

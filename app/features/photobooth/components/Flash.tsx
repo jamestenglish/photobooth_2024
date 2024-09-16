@@ -1,4 +1,4 @@
-import { usePhotoboothStatus } from "./PhotoboothStateProvider";
+import { usePhotoboothStatus } from "~/features/photobooth-state/components/PhotoboothStateProvider";
 
 export default function Flash() {
   const status = usePhotoboothStatus();
