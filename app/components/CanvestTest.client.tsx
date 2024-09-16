@@ -17,15 +17,6 @@ import {
 } from "./PhotoboothStateProvider";
 import { Form } from "@remix-run/react";
 
-/*
-         const w = 566;
-          const h = 426;
-          const x = 18;
-
-          const xOffset = 600;
-
-          const yPosts = [30, 477, 922];
-          */
 const SETTINGS = {
   WIDTH: 1200,
   HEIGHT: 1800,
@@ -40,9 +31,6 @@ const SETTINGS = {
   FRAME_WIDTH: 4,
   TEXT_OUTLINE_WIDTH: 8,
 } as const;
-
-// const WIDTH = 1200;
-// const HEIGHT = 1800;
 
 const fonts = [
   {
@@ -72,7 +60,6 @@ async function loadFonts(fontsToLoad: any) {
       font.style = fontStyle;
       await font.load();
       document.fonts.add(font);
-      // console.log(fontFamily, "loaded");
 
       // apply font styles to body
       let fontDOMEl = document.createElement("div");
@@ -98,8 +85,6 @@ export default function CanvasTest() {
   const { yetiBgIndicies, imgs } = usePhotoboothImages();
   const status = usePhotoboothStatus();
   const [file, setFile] = useState<string>("");
-
-  // const { addTask } = useTaskQueue({ shouldProcess: true });
 
   const promiseRef = useRef([Promise.resolve()]);
 
@@ -191,9 +176,7 @@ export default function CanvasTest() {
         console.log("drawing canvas");
         const template = new Image(SETTINGS.WIDTH, SETTINGS.HEIGHT);
         const templateImgs = [new Image(), new Image(), new Image()];
-        // const yetiImgs = YETIS.map(() => new Image());
 
-        // const promises = [template, ...templateImgs, ...yetiImgs].map((img) => {
         const promises = [template, ...templateImgs].map((img) => {
           return createImageLoadPromise(img);
         });
@@ -201,10 +184,6 @@ export default function CanvasTest() {
         templateImgs.forEach((img, index) => {
           img.src = imgs[index];
         });
-
-        // yetiImgs.forEach((img, index) => {
-        //   img.src = YETIS[index];
-        // });
 
         template.src = templateImg;
 
@@ -219,14 +198,6 @@ export default function CanvasTest() {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           ctx.drawImage(template, 0, 0);
-
-          // const w = 566;
-          // const h = 426;
-          // const x = 18;
-
-          // const xOffset = 600;
-
-          // const yPosts = [30, 477, 922];
 
           [0, SETTINGS.X_OFFSET].forEach((offset) => {
             SETTINGS.Y_OFFSETS.forEach((y, index) => {
