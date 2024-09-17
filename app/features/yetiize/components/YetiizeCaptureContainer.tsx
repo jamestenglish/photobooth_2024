@@ -1,5 +1,4 @@
-import { useRef, useState, useEffect, Dispatch, useCallback } from "react";
-import { processImage } from "../helpers/process.client";
+import { useState, useEffect, Dispatch, useCallback } from "react";
 import {
   usePhotoboothImages,
   usePhotoboothStateMethods,
@@ -14,39 +13,42 @@ import sadIcon1 from "~/images/sad-yeti-icon-1.png";
 import sadIcon2 from "~/images/sad-yeti-icon-2.png";
 import sadIcon3 from "~/images/sad-yeti-icon-3.png";
 import { ActionsType } from "~/features/photobooth-state/hooks/usePhotoboothState";
+import { useFetcher } from "@remix-run/react";
 
 const icons = [icon1, icon2, icon3];
 const sadIcons = [sadIcon1, sadIcon2, sadIcon3];
 
-const proccessImageBg = async ({
-  src,
-  index,
-  photoboothStateDispatch,
-}: {
-  photoboothStateDispatch: Dispatch<ActionsType>;
-  index: number;
-  src: string;
-}) => {
-  try {
-    const resultFile = await processImage({
-      imageBase64Url: src,
-      name: `${index}`,
-    });
+import { action } from "~/routes/_index";
 
-    const b64 = URL.createObjectURL(resultFile);
+// const proccessImageBg = async ({
+//   src,
+//   index,
+//   photoboothStateDispatch,
+// }: {
+//   photoboothStateDispatch: Dispatch<ActionsType>;
+//   index: number;
+//   src: string;
+// }) => {
+//   try {
+//     const resultFile = await processImage({
+//       imageBase64Url: src,
+//       name: `${index}`,
+//     });
 
-    photoboothStateDispatch({
-      type: "yetiizeFinish",
-      payload: { imgSrc: b64, index },
-    });
-  } catch (err) {
-    // TODO JTE handle error
-    photoboothStateDispatch({
-      type: "yetiizeFinish",
-      payload: { imgSrc: "error", index },
-    });
-  }
-};
+//     const b64 = URL.createObjectURL(resultFile);
+
+//     photoboothStateDispatch({
+//       type: "yetiizeFinish",
+//       payload: { imgSrc: b64, index },
+//     });
+//   } catch (err) {
+//     // TODO JTE handle error
+//     photoboothStateDispatch({
+//       type: "yetiizeFinish",
+//       payload: { imgSrc: "error", index },
+//     });
+//   }
+// };
 
 export default function YetiizeCaptureContainer({
   src,
@@ -58,57 +60,76 @@ export default function YetiizeCaptureContainer({
   bgImgSrc: string;
 }) {
   const { photoboothStateDispatch } = usePhotoboothStateMethods();
-  const { yetiBgIndicies } = usePhotoboothImages();
+  const { yetiBgIndicies, origImgs } = usePhotoboothImages();
   const yetiBgIndex = yetiBgIndicies[index];
+  const origImg = origImgs[index];
 
   const status = usePhotoboothStatus();
   const isBgEmpty = bgImgSrc.length === 0;
   const doesBgMatch = bgImgSrc === src && !isBgEmpty;
 
-  const [timerIds, setTimerIds] = useState<Array<NodeJS.Timeout>>([]);
+  const fetcher = useFetcher<typeof action>();
+  const { state, data } = fetcher;
+  const imageBase64Url = data?.imageBase64Url ?? "";
+  const formResultIndex = data?.index ?? `${index}`;
 
   useEffect(() => {
-    return () => {
-      timerIds.forEach((id) => {
-        if (id) {
-          clearTimeout(id);
+    console.log(
+      `formResultIndex: ${formResultIndex} | isBgEmpty: ${isBgEmpty} | state: ${state} | status: ${status} | imageBase64Url: ${imageBase64Url?.length}`
+    );
+
+    console.log(
+      `1: ${formResultIndex === `${index}`} | 2: ${isBgEmpty} | 3: ${state === "submitting"} | 4: ${
+        status === "yetiizeStart" && state === "idle" && imageBase64Url !== ""
+      }`
+    );
+    if (formResultIndex === `${index}`) {
+      console.log(data);
+      if (isBgEmpty) {
+        if (state === "submitting") {
+          console.log("dispatch yetiizeStart");
+          photoboothStateDispatch({ type: "yetiizeStart" });
+        } else if (
+          status === "yetiizeStart" &&
+          state === "idle" &&
+          imageBase64Url !== ""
+        ) {
+          console.log("dispatch yetiizeFinish");
+
+          photoboothStateDispatch({
+            type: "yetiizeFinish",
+            payload: { imgSrc: imageBase64Url, index },
+          });
         }
-      });
-    };
-  }, []);
+      }
+    }
+  }, [state, status, isBgEmpty, imageBase64Url, formResultIndex]);
 
   const onClickYetiize = useCallback(async () => {
     if (status === "yetiizeReady") {
       if (doesBgMatch) {
         photoboothStateDispatch({ type: "shuffleYetiBgIndex", payload: index });
       } else {
-        if (isBgEmpty) {
-          photoboothStateDispatch({ type: "yetiizeStart" });
+        // if (isBgEmpty) {
+        //   photoboothStateDispatch({ type: "yetiizeStart" });
 
-          const id = setTimeout(async () => {
-            await proccessImageBg({
-              src,
-              index,
-              photoboothStateDispatch,
-            });
-          }, 1000);
+        //   const id = setTimeout(async () => {
+        //     await proccessImageBg({
+        //       src,
+        //       index,
+        //       photoboothStateDispatch,
+        //     });
+        //   }, 1000);
 
-          setTimerIds((prev) => {
-            return [...prev, id];
-          });
-        } else {
-          photoboothStateDispatch({ type: "setBgImg", payload: index });
-        }
+        //   setTimerIds((prev) => {
+        //     return [...prev, id];
+        //   });
+        // } else {
+        photoboothStateDispatch({ type: "setBgImg", payload: index });
+        // }
       }
     }
-  }, [
-    doesBgMatch,
-    isBgEmpty,
-    proccessImageBg,
-    index,
-    photoboothStateDispatch,
-    status,
-  ]);
+  }, [doesBgMatch, isBgEmpty, index, photoboothStateDispatch, status]);
 
   const onClickUnYetiize = useCallback(async () => {
     if (status === "yetiizeReady" && doesBgMatch && !isBgEmpty) {
@@ -131,18 +152,44 @@ export default function YetiizeCaptureContainer({
         />
       </div>
 
-      <button
-        disabled={status !== "yetiizeReady"}
-        onClick={onClickYetiize}
-        className="disabled:cursor-not-allowed disabled:hover:bg-gray-200 disabled:text-gray-400 disabled:border-gray-400 disabled:bg-gray-300 inline-flex items-center mt-12 text-5xl py-4 px-6 border-4 text-dkblue border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
-      >
-        <img
-          src={icons[index]}
-          alt="yeti icon"
-          className="fill-current w-14 h-14 mr-2"
-        />
-        <span>Yeti-ize!</span>
-      </button>
+      {bgImgSrc !== "" && (
+        <button
+          disabled={status !== "yetiizeReady"}
+          onClick={onClickYetiize}
+          className="disabled:cursor-not-allowed disabled:hover:bg-gray-200 disabled:text-gray-400 disabled:border-gray-400 disabled:bg-gray-300 inline-flex items-center text-5xl py-4 px-6 border-4 text-dkblue border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+        >
+          <img
+            src={icons[index]}
+            alt="yeti icon"
+            className="fill-current w-14 h-14 mr-2"
+          />
+          <span>Yeti-ize!</span>
+        </button>
+      )}
+      {isBgEmpty && (
+        <fetcher.Form
+          id={`yetiize-form-${index}`}
+          key={`yetiize-form-${index}`}
+          method="post"
+        >
+          <input defaultValue={origImg} name="imageBase64Url" type="hidden" />
+          <input defaultValue={index} name="index" type="hidden" />
+
+          <button
+            disabled={status !== "yetiizeReady"}
+            className="disabled:cursor-not-allowed disabled:hover:bg-gray-200 disabled:text-gray-400 disabled:border-gray-400 disabled:bg-gray-300 inline-flex items-center text-5xl py-4 px-6 border-4 text-dkblue border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+            name="intent"
+            value="yetiize"
+          >
+            <img
+              src={icons[index]}
+              alt="yeti icon"
+              className="fill-current w-14 h-14 mr-2"
+            />
+            <span>Yeti-ize!</span>
+          </button>
+        </fetcher.Form>
+      )}
       {doesBgMatch && (
         <button
           onClick={onClickUnYetiize}

@@ -11,7 +11,10 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@c_phillips/ipp-browser": "^1.0.0",
     "@huggingface/transformers": "^3.0.0-alpha.15",
+    "@imgly/background-removal": "^1.5.5",
+    "@imgly/background-removal-node": "^1.4.5",
     "@react-spring/web": "^9.7.4",
     "@remix-run/node": "^2.11.2",
     "@remix-run/react": "^2.11.2",
@@ -26,7 +29,8 @@
     "react-dom": "^18.2.0",
     "react-webcam": "^7.2.0",
     "usehooks-ts": "^3.1.0",
-    "virtual-printer": "^1.0.17"
+    "virtual-printer": "^1.0.17",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.11.2",

@@ -25,11 +25,11 @@ export default function CapturePreview({
   lastImg: string | undefined;
 }) {
   const status = usePhotoboothStatus();
-  const initialRand = getRandomInt(YETI_PEEK_NUM);
+  // const initialRand = getRandomInt(YETI_PEEK_NUM);
 
   const initialState: PeekYetiMetaType = {
     index: -1,
-    previousIndicies: [initialRand],
+    previousIndicies: [-1],
   };
 
   const [peekYetiMeta, setPeekYetiMeta] =
@@ -39,11 +39,11 @@ export default function CapturePreview({
 
   useEffect(() => {
     if (isCapturePreview || status === "captureFlash") {
-      console.group("CapturePreview useEffect");
+      console.group("--------CapturePreview useEffect");
       setPeekYetiMeta((prev) => {
         for (let i = 0; i < YETI_PEEK_RETRY; i++) {
           const rand = getRandomInt(5);
-          console.log({ rand, prev });
+          console.log({ rand, prev, i });
 
           if (prev.previousIndicies.includes(rand)) {
             console.log("--try again");

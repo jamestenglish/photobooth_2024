@@ -18,4 +18,5 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  optimizeDeps: { exclude: ["@imgly/background-removal-node"] },
 });

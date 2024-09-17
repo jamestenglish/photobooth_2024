@@ -53,10 +53,9 @@ export async function processImage({
   }
   ctx.putImageData(pixelData, 0, 0);
   // Convert canvas to blob
-  const blob = await new Promise((resolve, reject) =>
+  const blob = await new Promise<Blob>((resolve, reject) =>
     canvas.toBlob((blob) => (blob ? resolve(blob) : reject()), "image/png")
   );
-  // @ts-ignore
   const processedFile = new File([blob], `${name}-bg-blasted.png`, {
     type: "image/png",
   });
