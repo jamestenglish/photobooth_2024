@@ -39,29 +39,29 @@ export default function CapturePreview({
 
   useEffect(() => {
     if (isCapturePreview || status === "captureFlash") {
-      console.group("--------CapturePreview useEffect");
+      // console.group("--------CapturePreview useEffect");
       setPeekYetiMeta((prev) => {
         for (let i = 0; i < YETI_PEEK_RETRY; i++) {
           const rand = getRandomInt(5);
-          console.log({ rand, prev, i });
+          // console.log({ rand, prev, i });
 
           if (prev.previousIndicies.includes(rand)) {
-            console.log("--try again");
+            // console.log("--try again");
             continue;
           }
           const newIndiciesTemp = [...prev.previousIndicies, rand];
           const newIndicies =
             newIndiciesTemp.length === 4 ? [rand] : newIndiciesTemp;
-          console.log({ newIndicies });
+          // console.log({ newIndicies });
           return {
             index: rand,
             previousIndicies: newIndicies,
           };
         }
-        console.log("### giving up");
+        // console.log("### giving up");
         return prev;
       });
-      console.groupEnd();
+      // console.groupEnd();
     }
   }, [status, isCapturePreview]);
 
@@ -70,34 +70,35 @@ export default function CapturePreview({
   if (isCapturePreview && lastImg !== undefined) {
     return (
       <>
-        <div className="z-10 col-span-3 col-start-1 row-span-3 row-start-1 grid items-center justify-center bg-white">
+        <div className="z-10 col-span-9 col-start-1 row-span-9 row-start-1 grid items-center justify-center bg-white">
           <img src={lastImg} className="my-auto" />
         </div>
+
         {index === 0 && (
-          <div className="z-20 col-span-1 col-start-1 row-span-1 row-start-2 grid items-center justify-center">
-            <img src={yetiLove1} className="ml-16" />
+          <div className="justify-right z-20 col-span-3 col-start-1 row-span-3 row-start-4 grid items-center">
+            <img src={yetiLove1} className="ml-6" />
           </div>
         )}
 
         {index === 1 && (
-          <div className="z-20 col-span-1 col-start-3 row-span-1 row-start-2 grid items-center justify-center">
+          <div className="z-20 col-span-3 col-start-7 row-span-6 row-start-3 grid items-center justify-center">
             <img src={yetiLove2} className="my-auto" />
           </div>
         )}
 
         {index === 2 && (
-          <div className="z-20 col-span-2 col-start-2 row-span-3 row-start-1 mt-40 grid items-center justify-center">
-            <img src={yetiLove3} className="ml-36" />
+          <div className="z-20 col-span-6 col-start-6 row-span-9 row-start-1 mt-40 grid items-center justify-center">
+            <img src={yetiLove3} />
           </div>
         )}
         {index === 3 && (
-          <div className="z-20 col-span-1 col-start-1 row-span-1 row-start-2 grid items-center justify-center">
-            <img src={yetiPeek1} className="ml-[58px]" />
+          <div className="z-20 col-span-3 col-start-1 row-span-3 row-start-3 grid items-center justify-center">
+            <img src={yetiPeek1} className="ml-[60px]" />
           </div>
         )}
         {index === 4 && (
-          <div className="z-20 col-span-3 col-start-3 row-span-3 row-start-1 grid items-center justify-center">
-            <img src={yetiPeek2} className="ml-[120px] max-h-[400px]" />
+          <div className="justify-right z-20 col-span-3 col-start-8 row-span-9 row-start-1 grid items-center">
+            <img src={yetiPeek2} className="ml-6 max-h-[480px]" />
           </div>
         )}
       </>

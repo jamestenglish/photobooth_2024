@@ -41,10 +41,10 @@ export default async function drawCanvas({
 }) {
   await Promise.all(promiseRef.current);
   promiseRef.current = [Promise.resolve()];
-  console.group("draw");
-  console.log({ length: promiseRef.current.length });
-  console.log({ foo: promiseRef.current[0] });
-  console.log("drawing canvas");
+  // console.group("draw");
+  // console.log({ length: promiseRef.current.length });
+  // console.log({ foo: promiseRef.current[0] });
+  // console.log("drawing canvas");
   const snipImg = new Image();
   const templateImages = [new Image(), new Image(), new Image()];
 
@@ -65,7 +65,7 @@ export default async function drawCanvas({
   await Promise.all(promises);
 
   if (ctx !== null) {
-    console.log("  ctx not null");
+    // console.log("  ctx not null");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = SETTINGS.BG_COLOR;
@@ -149,7 +149,7 @@ export default async function drawCanvas({
     );
   });
   setFinalImg(canvas.toDataURL("image/jpeg"));
-  console.groupEnd();
+  // console.groupEnd();
 }
 
 export async function loadFonts(fontsToLoad: any) {
@@ -201,8 +201,8 @@ export const loadStaticAssets = async ({
   yetiBgImages: HTMLImageElement[];
   setIsStaticLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  console.group("static loading");
-  console.log("loading static promises");
+  // console.group("static loading");
+  // console.log("loading static promises");
   await loadFonts(fonts);
 
   const promises = [...yetiBgImages].map((img) => {
@@ -214,7 +214,7 @@ export const loadStaticAssets = async ({
   });
 
   await Promise.all(promises);
-  console.log("DONE loading static promises");
+  // console.log("DONE loading static promises");
   setIsStaticLoaded(true);
-  console.groupEnd();
+  // console.groupEnd();
 };

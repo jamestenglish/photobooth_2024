@@ -44,30 +44,20 @@ export default function YetiizeCaptureContainer({
   const formResultIndex = data?.index ?? `${index}`;
 
   useEffect(() => {
-    console.group("YetiizeCaptureContainer useEffect");
-    console.log(
-      `formResultIndex: ${formResultIndex} | isBgRemovedImgEmpty: ${isBgRemovedImgEmpty} | state: ${state} | status: ${status} | imgBgRemovedSrcResult: ${imgBgRemovedSrcResult?.length}`,
-    );
-
-    console.log(
-      `1: ${formResultIndex === `${index}`} | 2: ${isBgRemovedImgEmpty} | 3: ${state === "submitting"} | 4: ${
-        status === "yetiizeStart" &&
-        state === "idle" &&
-        imgBgRemovedSrcResult !== ""
-      }`,
-    );
     if (formResultIndex === `${index}`) {
-      console.log("data", data);
+      if (data !== undefined) {
+        console.log("data", data);
+      }
       if (isBgRemovedImgEmpty) {
         if (state === "submitting") {
-          console.log("dispatch yetiizeStart");
+          // console.log("dispatch yetiizeStart");
           photoboothStateDispatch({ type: "yetiizeStart" });
         } else if (
           status === "yetiizeStart" &&
           state === "idle" &&
           imgBgRemovedSrcResult !== ""
         ) {
-          console.log("dispatch yetiizeFinish");
+          // console.log("dispatch yetiizeFinish");
 
           photoboothStateDispatch({
             type: "yetiizeFinish",
@@ -76,7 +66,7 @@ export default function YetiizeCaptureContainer({
         }
       }
     }
-    console.groupEnd();
+    // console.groupEnd();
   }, [
     state,
     status,

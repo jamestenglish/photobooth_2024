@@ -44,6 +44,7 @@ export default function PhotoboothStateProvider({
   containerRef,
   previousCapturesContainerRef,
   webcamDisplayRef,
+  resetAnimation,
 }: {
   children: React.ReactNode;
   startAnimation: () => void;
@@ -51,6 +52,7 @@ export default function PhotoboothStateProvider({
   containerRef: React.RefObject<HTMLDivElement>;
   previousCapturesContainerRef: React.RefObject<HTMLDivElement>;
   webcamDisplayRef: React.RefObject<HTMLDivElement>;
+  resetAnimation: () => void;
 }) {
   const {
     status,
@@ -64,6 +66,7 @@ export default function PhotoboothStateProvider({
   } = usePhotoboothState({
     startAnimation,
     animationStatus,
+    resetAnimation,
   });
 
   const methodsValue: PhotoboothMethodsType = {

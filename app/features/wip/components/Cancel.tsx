@@ -1,23 +1,28 @@
-import icon1 from "~/images/yeti-paint-icons-1.png";
-import icon2 from "~/images/yeti-paint-icons-2.png";
+import { useCallback } from "react";
+import { usePhotoboothStateMethods } from "~/features/photobooth-state/components/PhotoboothStateProvider";
+import icon1 from "~/images/yeti-leaving-icon.png";
 
 export default function Cancel() {
+  const { photoboothStateDispatch } = usePhotoboothStateMethods();
+
+  const onClick = useCallback(() => {
+    photoboothStateDispatch({ type: "reset" });
+  }, [photoboothStateDispatch]);
+
   return (
     <>
-      <div className="justify-left col-span-1 col-start-1 row-start-3 mt-12 grid items-center">
+      <div className="justify-left col-span-3 col-start-1 row-span-2 row-start-8 mb-12 ml-4 grid items-end">
         <div>
-          <button className="mountains-of-christmas-bold bg-error my-12 flex items-center rounded-3xl border-4 border-ltblue px-6 py-4 text-4xl text-dkblue hover:bg-ltblue">
+          <button
+            onClick={onClick}
+            className="mountains-of-christmas-bold bg-error hover:border-error flex items-center rounded-3xl border-4 border-ltblue px-6 py-4 text-6xl text-dkblue hover:bg-ltblue"
+          >
             <img
               src={icon1}
               alt="yeti icon"
               className="mr-2 h-12 w-12 fill-current"
             />
             <span>cancel</span>
-            <img
-              src={icon2}
-              alt="yeti icon"
-              className="ml-2 h-12 w-12 fill-current"
-            />
           </button>
         </div>
       </div>

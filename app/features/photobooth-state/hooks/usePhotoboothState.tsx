@@ -15,6 +15,7 @@ export type StatusType =
   | "yetiizeStart"
   | "yetiizeFinish"
   | "print"
+  | "resetting"
   | "noop";
 
 type YetiizeFinishPayloadType = {
@@ -29,6 +30,8 @@ export type ActionsType =
   | { type: "captureImg"; payload: string }
   | { type: "setOriginalImg"; payload: number }
   | { type: "setBgRemovedImg"; payload: number }
+  | { type: "reset" }
+  | { type: "resetFinish" }
   | { type: "shuffleYetiBgIndex"; payload: number };
 
 type ActionType = ActionsType[keyof ActionsType];
@@ -65,6 +68,7 @@ const statusMap: StatusMapType = {
   yetiizeStart: (state) => "yetiizeFinish",
   // TODO JTE: handle error
   yetiizeFinish: (state) => "yetiizeReady",
+  resetting: () => "ready",
   print: (state) => "ready",
   noop: (state) => "noop",
 };
@@ -74,7 +78,7 @@ function getRandomInt(max: number) {
 }
 function getNextYetiIndex(prevIndex: number) {
   const newIndex = (prevIndex + 1) % YETIS.length;
-  console.log("getNextYetiIndex", { newIndex });
+  // console.log("getNextYetiIndex", { newIndex });
   return newIndex;
 }
 
@@ -163,9 +167,16 @@ function reducerInner(state: StateType, action: ActionsType): StateType {
       };
 
     case "nextStatus":
+      // console.log(
+      //   `nextStatus || prevStatus: ${state.status} | nextStatus: ${nextStatus}`,
+      // );
       return { ...state, status: nextStatus };
     case "yetiizeStart":
       return { ...state, status: "yetiizeStart" };
+    case "reset":
+      return { ...state, status: "resetting" };
+    case "resetFinish":
+      return initialState;
     // -------- types that don't change status
     case "setOriginalImg":
       const { payload: setOrigImgIndex } = action;
@@ -238,9 +249,11 @@ function reducer(state: StateType, action: ActionsType): StateType {
 export default function usePhotoboothState({
   startAnimation,
   animationStatus,
+  resetAnimation,
 }: {
   startAnimation: () => void;
   animationStatus: AnimationStatusType;
+  resetAnimation: () => void;
 }) {
   const [state, photoboothStateDispatch] = useReducer(reducer, initialState);
   const [finalImg, setFinalImg] = useState<string>("");
@@ -281,7 +294,7 @@ export default function usePhotoboothState({
     }
 
     if (status === "animateStart" && animationStatus === "ready") {
-      console.log("starting animation");
+      // console.log("starting animation");
       startAnimation();
       photoboothStateDispatch({ type: "nextStatus" });
     }
@@ -294,6 +307,11 @@ export default function usePhotoboothState({
       photoboothStateDispatch({ type: "nextStatus" });
     }
 
+    if (status === "resetting") {
+      resetAnimation();
+      photoboothStateDispatch({ type: "resetFinish" });
+    }
+
     return () => {
       ids.forEach((id) => {
         if (id !== undefined) {
@@ -301,7 +319,7 @@ export default function usePhotoboothState({
         }
       });
     };
-  }, [status, animationStatus]);
+  }, [status, animationStatus, resetAnimation, photoboothStateDispatch]);
 
   return {
     status,

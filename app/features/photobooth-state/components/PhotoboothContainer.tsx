@@ -14,6 +14,7 @@ export default function PhotoboothContainer({
     containerRef,
     webcamDisplayRef,
     startAnimation,
+    resetAnimation,
     animationStatus,
   } = useAnimation();
   return (
@@ -23,6 +24,7 @@ export default function PhotoboothContainer({
       previousCapturesContainerRef={previousCapturesContainerRef}
       containerRef={containerRef}
       webcamDisplayRef={webcamDisplayRef}
+      resetAnimation={resetAnimation}
     >
       <WindowConstraint>{children}</WindowConstraint>
       <Canvas />

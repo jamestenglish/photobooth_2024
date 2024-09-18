@@ -4,7 +4,7 @@ import {
   type MetaFunction,
 } from "@remix-run/node";
 
-import { MOCK_PRINT, IS_PRINTER } from "~/constants";
+import { MOCK_PRINT, IS_PRINTER, PRINTER_URL } from "~/constants";
 
 import { processImage } from "~/features/yetiize/helpers/imglyProcessNode.server";
 
@@ -21,7 +21,8 @@ export const meta: MetaFunction = () => {
 
 import print, {
   getJobs,
-  queryPrinter,
+  getJobAttributes,
+  queryPrinterAttributes,
 } from "~/features/print/helpers/print.server";
 import Photobooth from "~/features/photobooth/components/Photobooth";
 
@@ -31,6 +32,12 @@ const printActionFormSchema = z.object({
   imgSrc: z.string(),
   intent: intentSchema,
 });
+
+const sleep = async (time: number) => {
+  await new Promise((resolve) => {
+    setTimeout(() => resolve(""), time);
+  });
+};
 
 const printAction = async ({ formData }: { formData: FormData }) => {
   const formPayload = Object.fromEntries(formData);
@@ -49,30 +56,70 @@ const printAction = async ({ formData }: { formData: FormData }) => {
     const dataArrayBuffer = await processedFile.arrayBuffer();
     const data = Buffer.from(dataArrayBuffer);
 
-    const url = "http://10.0.0.145:631/";
+    const url = PRINTER_URL;
     console.log({ url });
+    let jobId;
 
-    if (MOCK_PRINT) {
-      await new Promise((resolve) => {
-        setTimeout(() => resolve(""), 5000);
-      });
-    } else {
-      const response = await print({ url, data });
-      console.log({ response });
+    try {
+      // if (IS_PRINTER) {
+      //   const printerAttributes = await queryPrinterAttributes({ url });
+      //   console.log(JSON.stringify(printerAttributes, null, 2));
+      //   console.log("==========\n==========\n==========\n==========\n");
+      // }
+      if (MOCK_PRINT) {
+        await sleep(5000);
+        jobId = 1337;
+      } else {
+        const response = await print({ url, data });
+        console.log("\n\nprint response: ");
+        console.log({ response });
+        jobId = response?.["job-attributes-tag"]?.["job-id"] ?? undefined;
+      }
+
+      // if (IS_PRINTER) {
+      //   // const getJobsResult = await getJobs({ url });
+
+      //   // console.log("\n\ngetJobsResult: ");
+      //   // console.log({ getJobsResult });
+
+      //   const jobAttributes = await getJobAttributes({ url, jobId });
+
+      //   console.log("\njobAttributes: ");
+      //   console.log({ jobAttributes });
+
+      //   for (let i = 0; i < 100; i++) {
+      //     await sleep(5000);
+
+      //     const jobAttributes2 = await getJobAttributes({ url, jobId });
+
+      //     console.log("\njobAttributes2: ");
+      //     console.log({ jobAttributes2 });
+      //     if (
+      //       jobAttributes2?.["job-attributes-tag"]?.["time-at-completed"] !== ""
+      //     ) {
+      //       break;
+      //     }
+      //   }
+      // }
+    } catch (error) {
+      console.error("printer error:", { error });
+      if (error instanceof Error) {
+        const message = error.message;
+        return redirect(`/error/?error=${message}`);
+      }
+      return redirect("/error/?error=unknown");
     }
 
-    if (IS_PRINTER) {
-      await queryPrinter({ url });
-
-      const getJobsResult = await getJobs({ url });
-
-      console.log({ getJobsResult });
+    if (jobId === undefined) {
+      return redirect("/error?error=undefined-job-id");
     }
 
-    return redirect(`/printing/1234`);
+    return redirect(`/printing/${jobId}`);
+    // return redirect(`/?success=true`);
   } catch (error) {
+    console.error(error);
     console.error(`print form not submitted ${error}`);
-    return redirect(`/?error=form-not-submitted`);
+    return redirect(`/error/?error=form-not-submitted`);
   }
 };
 

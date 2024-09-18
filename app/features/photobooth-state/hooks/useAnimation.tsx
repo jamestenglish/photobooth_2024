@@ -18,17 +18,19 @@ export default function useAnimation() {
 
   const webcamDisplayRef = useRef<HTMLDivElement>(null);
 
+  const from = {
+    scrollY: 0,
+    maxHeight: MAX_HEIGHT_START_RM,
+    columnGap: COLUMN_GAP_START_RM,
+    height: 0,
+  };
+
   const [_props, api] = useSpring(() => ({
     config: {
       easing: easings.easeInCubic,
       duration: ANIMATION_DURATION_MS,
     },
-    from: {
-      scrollY: 0,
-      maxHeight: MAX_HEIGHT_START_RM,
-      columnGap: COLUMN_GAP_START_RM,
-      height: 0,
-    },
+    from,
     onChange: (result) => {
       if (
         previousCapturesContainerRef?.current?.style.columnGap !== undefined
@@ -68,12 +70,7 @@ export default function useAnimation() {
       easing: easings.easeInCubic,
       duration: 1,
     },
-    from: {
-      scrollY: 0,
-      maxHeight: MAX_HEIGHT_START_RM,
-      columnGap: COLUMN_GAP_START_RM,
-      height: 0,
-    },
+    from,
     onStart: () => {
       console.log(`secondOnStart: ${new Date()}`);
     },
@@ -86,6 +83,7 @@ export default function useAnimation() {
     const height =
       webcamDisplayRef?.current?.getBoundingClientRect()?.height ?? 0;
     console.log(`startAnimation: ${new Date()}`);
+    console.log({ top, height });
     api.start({
       to: {
         scrollY: top,
@@ -93,14 +91,42 @@ export default function useAnimation() {
         columnGap: COLUMN_GAP_TARGET_RM,
         maxHeight: MAX_HEIGHT_TARGET_RM,
       },
+      from: {
+        scrollY: 0,
+        maxHeight: MAX_HEIGHT_START_RM,
+        columnGap: COLUMN_GAP_START_RM,
+        height: 0,
+      },
     });
   }, [api, setAnimationStatus]);
+
+  const resetAnimation = useCallback(() => {
+    setAnimationStatus("ready");
+    if (previousCapturesContainerRef?.current?.style.columnGap !== undefined) {
+      previousCapturesContainerRef.current.style.columnGap = `${from.columnGap}rem`;
+
+      const images = Array.from(
+        previousCapturesContainerRef.current.getElementsByClassName(
+          "preview-img",
+        ),
+      );
+      images.forEach((el) => {
+        const img = el as HTMLImageElement;
+        img.style.maxHeight = `${from.height}rem`;
+      });
+    }
+
+    if (webcamDisplayRef?.current?.style !== undefined) {
+      webcamDisplayRef.current.style.marginTop = `${from.height}px`;
+    }
+  }, [setAnimationStatus]);
 
   return {
     containerRef,
     previousCapturesContainerRef,
     animationStatus,
     startAnimation,
+    resetAnimation,
     webcamDisplayRef,
   };
 }

@@ -36,7 +36,7 @@ export default function Countdowner() {
   }
 
   return (
-    <div className="z-10 col-span-3 col-start-1 row-span-2 row-start-1 grid items-center justify-center">
+    <div className="z-10 col-span-9 col-start-1 row-span-2 row-start-1 grid items-center justify-center">
       <span
         style={{
           fontSize: "16rem",

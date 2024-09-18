@@ -4,10 +4,7 @@ export default function Flash() {
   const status = usePhotoboothStatus();
   if (status === "capture" || status === "captureFlash") {
     return (
-      <div
-        style={{ border: "1px solid magenta" }}
-        className="z-10 col-span-3 col-start-1 row-span-3 row-start-1 h-screen w-screen bg-white"
-      >
+      <div className="z-10 col-span-9 col-start-1 row-span-9 row-start-1 h-screen w-screen bg-white">
         {" "}
       </div>
     );

@@ -54,7 +54,7 @@ export default function Canvas() {
   );
 
   useLayoutEffect(() => {
-    console.log({ length: images.length, status, yetiBgIndicies });
+    // console.log({ length: images.length, status, yetiBgIndicies });
     if (images.length === 3 && isStaticLoaded) {
       const promise = drawCanvas({
         promiseRef,
@@ -76,6 +76,7 @@ export default function Canvas() {
 
   return (
     <>
+      <div>Status: {status}</div>
       <div>
         Canvas:<canvas className="border-1 border-green" id="c"></canvas>
       </div>
