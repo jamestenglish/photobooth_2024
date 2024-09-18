@@ -1,3 +1,8 @@
+import {
+  useAnimationRefs,
+  usePhotoboothStatus,
+} from "~/features/photobooth-state/components/PhotoboothStateProvider";
+
 // TODO JTE smaller max-h and change animation params
 export default function PreviousCaptureContainer({ src }: { src: string }) {
   return (

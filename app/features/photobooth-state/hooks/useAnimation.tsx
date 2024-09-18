@@ -85,9 +85,7 @@ export default function useAnimation() {
       previousCapturesContainerRef?.current?.getBoundingClientRect()?.top ?? 0;
     const height =
       webcamDisplayRef?.current?.getBoundingClientRect()?.height ?? 0;
-
     console.log(`startAnimation: ${new Date()}`);
-
     api.start({
       to: {
         scrollY: top,

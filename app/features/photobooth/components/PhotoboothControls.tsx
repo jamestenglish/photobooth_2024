@@ -14,8 +14,7 @@ export default function PhotoboothControls({
 }) {
   const status = usePhotoboothStatus();
 
-  const { webcamDisplayRef, previousCapturesContainerRef, containerRef } =
-    useAnimationRefs();
+  const { webcamDisplayRef, containerRef } = useAnimationRefs();
 
   const areControlsVisible = status !== "capturePreview";
 
@@ -24,29 +23,22 @@ export default function PhotoboothControls({
   return (
     <>
       {areControlsPresent && (
+        // <div
+        //   className="col-span-3 col-start-1 row-span-3 row-start-1 items-center align-middle"
+        //   style={{ border: "1px green" }}
+        // >
+        // <div
+        //   ref={containerRef}
+        //   className="flex h-full flex-col gap-6 overflow-hidden"
+        // >
         <div
-          className="col-span-3 col-start-1 row-span-3 row-start-1 items-center align-middle"
-          style={{ border: "1px green" }}
+          ref={webcamDisplayRef}
+          className={`${areControlsVisible ? "" : "hidden"} mx-auto flex flex-col items-center gap-y-2`}
         >
-          <div
-            ref={containerRef}
-            className="flex h-full flex-col gap-6 overflow-hidden"
-          >
-            <div
-              ref={webcamDisplayRef}
-              className={`${areControlsVisible ? "" : "hidden"} mx-auto flex flex-col items-center gap-y-2`}
-            >
-              <WebCamDisplay onCapture={onCapture} status={status} />
-            </div>
-
-            <div
-              ref={previousCapturesContainerRef}
-              className={`${areControlsVisible ? "" : "hidden"} mx-auto flex flex-1 flex-row content-start items-start justify-center gap-x-2`}
-            >
-              <PreviousCaptures />
-            </div>
-          </div>
+          <WebCamDisplay onCapture={onCapture} status={status} />
         </div>
+        // </div>
+        // </div>
       )}
     </>
   );

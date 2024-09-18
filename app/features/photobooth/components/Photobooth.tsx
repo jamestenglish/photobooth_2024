@@ -4,6 +4,7 @@ import CapturePreview from "./CapturePreview";
 import PhotoboothControls from "./PhotoboothControls";
 import { SCREEN_WIDTH, SCREEN_HEIGHT, YETIIZE_STATUSES } from "~/constants";
 import {
+  useAnimationRefs,
   usePhotoboothImages,
   usePhotoboothStateMethods,
   usePhotoboothStatus,
@@ -11,12 +12,14 @@ import {
 import YetiizeLoading from "~/features/yetiize/components/YetiizeLoading";
 import YetiizeControls from "~/features/yetiize/components/YetiizeControls";
 import PrintForm from "~/features/wip/components/PrintForm";
+import PreviousCaptures from "./PreviousCaptures";
 
 export default function Photobooth() {
   const { photoboothStateDispatch } = usePhotoboothStateMethods();
   const { images, finalImg } = usePhotoboothImages();
 
   const status = usePhotoboothStatus();
+  const { containerRef } = useAnimationRefs();
 
   const onCapture = (imgSrc: string) => {
     photoboothStateDispatch({ type: "captureImg", payload: imgSrc });
@@ -34,8 +37,16 @@ export default function Photobooth() {
 
         <YetiizeLoading />
         <CapturePreview lastImg={lastImg} />
+        <div className="col-span-3 col-start-1 row-span-3 row-start-1 items-center align-middle">
+          <div
+            ref={containerRef}
+            className="flex h-full flex-col gap-6 overflow-hidden"
+          >
+            <PhotoboothControls onCapture={onCapture} />
 
-        <PhotoboothControls onCapture={onCapture} />
+            <PreviousCaptures />
+          </div>
+        </div>
 
         <YetiizeControls />
 
