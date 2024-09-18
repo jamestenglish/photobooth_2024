@@ -37,8 +37,8 @@ export default function useAnimation() {
 
         const images = Array.from(
           previousCapturesContainerRef.current.getElementsByClassName(
-            "preview-img"
-          )
+            "preview-img",
+          ),
         );
         images.forEach((el) => {
           const img = el as HTMLImageElement;

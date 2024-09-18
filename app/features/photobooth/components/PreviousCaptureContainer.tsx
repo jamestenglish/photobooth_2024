@@ -1,9 +1,9 @@
 // TODO JTE smaller max-h and change animation params
 export default function PreviousCaptureContainer({ src }: { src: string }) {
   return (
-    <div className="flex flex-col gap-6 items-center">
+    <div className="flex flex-col items-center gap-6">
       <img
-        className="border-2 border-dkblue preview-img object-scale-down max-h-48"
+        className="preview-img max-h-48 border-2 border-dkblue object-scale-down"
         src={src}
       />
     </div>

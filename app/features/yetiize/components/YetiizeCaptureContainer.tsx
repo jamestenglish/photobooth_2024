@@ -47,7 +47,7 @@ export default function YetiizeCaptureContainer({
   useEffect(() => {
     console.group("YetiizeCaptureContainer useEffect");
     console.log(
-      `formResultIndex: ${formResultIndex} | isBgRemovedImgEmpty: ${isBgRemovedImgEmpty} | state: ${state} | status: ${status} | imgBgRemovedSrcResult: ${imgBgRemovedSrcResult?.length}`
+      `formResultIndex: ${formResultIndex} | isBgRemovedImgEmpty: ${isBgRemovedImgEmpty} | state: ${state} | status: ${status} | imgBgRemovedSrcResult: ${imgBgRemovedSrcResult?.length}`,
     );
 
     console.log(
@@ -55,7 +55,7 @@ export default function YetiizeCaptureContainer({
         status === "yetiizeStart" &&
         state === "idle" &&
         imgBgRemovedSrcResult !== ""
-      }`
+      }`,
     );
     if (formResultIndex === `${index}`) {
       console.log("data", data);
@@ -129,16 +129,16 @@ export default function YetiizeCaptureContainer({
   }, [doesBgRemovedMatchSrc, isBgRemovedImgEmpty, index, status]);
 
   return (
-    <div className="flex flex-col gap-6 items-center mt-6">
-      <div className="grid grid-col-1 grid-row-1">
-        <div className="row-start-1 col-start-1 max-h-[316px] max-w-[424px] overflow-hidden">
+    <div className="mt-6 flex flex-col items-center gap-6">
+      <div className="grid-col-1 grid-row-1 grid">
+        <div className="col-start-1 row-start-1 max-h-[316px] max-w-[424px] overflow-hidden">
           <img
-            className="preview-img object-fill max-w-full"
+            className="preview-img max-w-full object-fill"
             src={YETIS[yetiBgIndex]}
           />
         </div>
         <img
-          className="border-2 border-dkblue preview-img object-scale-down row-start-1 col-start-1 "
+          className="preview-img col-start-1 row-start-1 border-2 border-dkblue object-scale-down"
           src={imgSrc}
         />
       </div>
@@ -147,12 +147,12 @@ export default function YetiizeCaptureContainer({
         <button
           disabled={status !== "yetiizeReady"}
           onClick={onClickYetiize}
-          className="disabled:cursor-not-allowed disabled:hover:bg-gray-200 disabled:text-gray-400 disabled:border-gray-400 disabled:bg-gray-300 inline-flex items-center text-5xl py-4 px-6 border-4 text-dkblue border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+          className="mountains-of-christmas-bold inline-flex items-center rounded-3xl border-4 border-dkblue px-6 py-4 text-5xl text-dkblue hover:bg-ltblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
         >
           <img
             src={icons[index]}
             alt="yeti icon"
-            className="fill-current w-14 h-14 mr-2"
+            className="mr-2 h-14 w-14 fill-current"
           />
           <span>Yeti-ize!</span>
         </button>
@@ -168,14 +168,14 @@ export default function YetiizeCaptureContainer({
 
           <button
             disabled={status !== "yetiizeReady"}
-            className="disabled:cursor-not-allowed disabled:hover:bg-gray-200 disabled:text-gray-400 disabled:border-gray-400 disabled:bg-gray-300 inline-flex items-center text-5xl py-4 px-6 border-4 text-dkblue border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+            className="mountains-of-christmas-bold inline-flex items-center rounded-3xl border-4 border-dkblue px-6 py-4 text-5xl text-dkblue hover:bg-ltblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
             name="intent"
             value="yetiize"
           >
             <img
               src={icons[index]}
               alt="yeti icon"
-              className="fill-current w-14 h-14 mr-2"
+              className="mr-2 h-14 w-14 fill-current"
             />
             <span>Yeti-ize!</span>
           </button>
@@ -184,12 +184,12 @@ export default function YetiizeCaptureContainer({
       {doesBgRemovedMatchSrc && (
         <button
           onClick={onClickUnYetiize}
-          className="inline-flex items-center align-center content-center text-3xl  py-2 px-4 border-4 text-pastel border-pastel hover:bg-ltblue hover:text-dkblue rounded-3xl mountains-of-christmas-bold"
+          className="align-center mountains-of-christmas-bold inline-flex content-center items-center rounded-3xl border-4 border-pastel px-4 py-2 text-3xl text-pastel hover:bg-ltblue hover:text-dkblue"
         >
           <img
             src={sadIcons[index]}
             alt="yeti icon"
-            className="fill-current w-12 h-12 mr-2"
+            className="mr-2 h-12 w-12 fill-current"
           />
           <span>Un-Yeti</span>
         </button>

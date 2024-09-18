@@ -79,7 +79,7 @@ export default async function drawCanvas({
           offset + (SETTINGS.INITIAL_X - SETTINGS.FRAME_WIDTH / 4),
           y - SETTINGS.FRAME_WIDTH / 4,
           SETTINGS.PICTURE_WIDTH + SETTINGS.FRAME_WIDTH / 2,
-          SETTINGS.PICTURE_HEIGHT + SETTINGS.FRAME_WIDTH / 2
+          SETTINGS.PICTURE_HEIGHT + SETTINGS.FRAME_WIDTH / 2,
         );
         // ctx.reset();
 
@@ -94,14 +94,14 @@ export default async function drawCanvas({
           SETTINGS.INITIAL_X + offset,
           y,
           SETTINGS.PICTURE_WIDTH,
-          SETTINGS.PICTURE_HEIGHT
+          SETTINGS.PICTURE_HEIGHT,
         );
         ctx.drawImage(
           templateImages[index],
           SETTINGS.INITIAL_X + offset,
           y,
           SETTINGS.PICTURE_WIDTH,
-          SETTINGS.PICTURE_HEIGHT
+          SETTINGS.PICTURE_HEIGHT,
         );
       });
     });
@@ -144,7 +144,7 @@ export default async function drawCanvas({
   const blob = await new Promise((resolve, reject) => {
     return canvas.toBlob(
       (blob) => (blob ? resolve(blob) : reject()),
-      "image/png"
+      "image/png",
     );
   });
   setFinalImg(canvas.toDataURL("image/jpeg"));
@@ -177,7 +177,7 @@ export async function loadFonts(fontsToLoad: any) {
       document.body.appendChild(fontDOMEl);
       fontDOMEl.setAttribute(
         "style",
-        `position:fixed; height:0; width:0; overflow:hidden; font-family:${fontFamily}; font-weight:${fontWeight}; font-style:${fontStyle}`
+        `position:fixed; height:0; width:0; overflow:hidden; font-family:${fontFamily}; font-weight:${fontWeight}; font-style:${fontStyle}`,
       );
     }
   }

@@ -6,7 +6,7 @@ export default function Flash() {
     return (
       <div
         style={{ border: "1px solid magenta" }}
-        className="z-10 bg-white col-start-1 col-span-3 row-start-1 row-span-3 w-screen h-screen"
+        className="z-10 col-span-3 col-start-1 row-span-3 row-start-1 h-screen w-screen bg-white"
       >
         {" "}
       </div>

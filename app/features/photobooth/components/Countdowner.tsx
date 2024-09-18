@@ -36,13 +36,13 @@ export default function Countdowner() {
   }
 
   return (
-    <div className="grid z-10 col-start-1 col-span-3 row-start-1 row-span-2 justify-center items-center">
+    <div className="z-10 col-span-3 col-start-1 row-span-2 row-start-1 grid items-center justify-center">
       <span
         style={{
           fontSize: "16rem",
           animation: "ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite",
         }}
-        className="animate-ping mountains-of-christmas-bold drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)] text-white text-outline"
+        className="mountains-of-christmas-bold text-outline animate-ping text-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"
       >
         {countdown}
       </span>

@@ -25,23 +25,23 @@ export default function PhotoboothControls({
     <>
       {areControlsPresent && (
         <div
-          className="col-start-1 col-span-3 row-start-1 row-span-3 items-center align-middle"
+          className="col-span-3 col-start-1 row-span-3 row-start-1 items-center align-middle"
           style={{ border: "1px green" }}
         >
           <div
             ref={containerRef}
-            className="flex flex-col gap-6 h-full overflow-hidden"
+            className="flex h-full flex-col gap-6 overflow-hidden"
           >
             <div
               ref={webcamDisplayRef}
-              className={`${areControlsVisible ? "" : "hidden"} flex items-center flex-col mx-auto gap-y-2`}
+              className={`${areControlsVisible ? "" : "hidden"} mx-auto flex flex-col items-center gap-y-2`}
             >
               <WebCamDisplay onCapture={onCapture} status={status} />
             </div>
 
             <div
               ref={previousCapturesContainerRef}
-              className={`${areControlsVisible ? "" : "hidden"} flex justify-center items-start content-start flex-row mx-auto gap-x-2 flex-1`}
+              className={`${areControlsVisible ? "" : "hidden"} mx-auto flex flex-1 flex-row content-start items-start justify-center gap-x-2`}
             >
               <PreviousCaptures />
             </div>

@@ -27,7 +27,7 @@ export default function Photobooth() {
 
   return (
     <>
-      <div className="grid grid-cols-3 grid-rows-3 w-full h-full bg-snow">
+      <div className="grid h-full w-full grid-cols-3 grid-rows-3 bg-snow">
         <Flash />
 
         <Countdowner />

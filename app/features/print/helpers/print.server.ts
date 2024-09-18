@@ -29,7 +29,7 @@ export default async function print({
           statusCode: any;
           id: any;
           data: any;
-        } | null
+        } | null,
       ) {
         if (err !== null) {
           console.error(res);
@@ -38,7 +38,7 @@ export default async function print({
         } else {
           resolve(res);
         }
-      }
+      },
     );
   });
 }

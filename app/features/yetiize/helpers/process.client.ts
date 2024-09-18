@@ -31,7 +31,7 @@ export async function processImage({
   const maskData = (
     await RawImage.fromTensor(output[0].mul(255).to("uint8")).resize(
       img.width,
-      img.height
+      img.height,
     )
   ).data;
 
@@ -52,7 +52,7 @@ export async function processImage({
   ctx.putImageData(pixelData, 0, 0);
   // Convert canvas to blob
   const blob = await new Promise<Blob>((resolve, reject) =>
-    canvas.toBlob((blob) => (blob ? resolve(blob) : reject()), "image/png")
+    canvas.toBlob((blob) => (blob ? resolve(blob) : reject()), "image/png"),
   );
   const processedFile = new File([blob], `${name}-bg-blasted.png`, {
     type: "image/png",

@@ -11,11 +11,11 @@ export default function PhotoboothControls() {
     <>
       {areControlsPresent && (
         <div
-          className="col-start-1 col-span-3 row-start-1 row-span-3 items-center align-middle"
+          className="col-span-3 col-start-1 row-span-3 row-start-1 items-center align-middle"
           style={{ border: "1px green" }}
         >
           <div
-            className={`flex justify-center items-start content-start flex-row mx-auto gap-x-2 flex-1`}
+            className={`mx-auto flex flex-1 flex-row content-start items-start justify-center gap-x-2`}
           >
             <YetiizeCaptures />
           </div>

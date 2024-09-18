@@ -204,7 +204,7 @@ function reducerInner(state: StateType, action: ActionsType): StateType {
     case "shuffleYetiBgIndex":
       const captureIndex = action.payload;
       const nextYetiBgIndex = getNextYetiIndex(
-        state.yetiBgIndicies[captureIndex]
+        state.yetiBgIndicies[captureIndex],
       );
       const newYetiBgIndicies = replace<number>({
         index: captureIndex,
@@ -257,7 +257,7 @@ export default function usePhotoboothState({
   const origImages = useMemo(() => origImagesRaw, [origImagesRaw]);
   const bgRemovedImages = useMemo(
     () => bgRemovedImagesRaw,
-    [bgRemovedImagesRaw]
+    [bgRemovedImagesRaw],
   );
   const yetiBgIndicies = useMemo(() => yetiBgIndiciesRaw, [yetiBgIndiciesRaw]);
 
@@ -268,7 +268,7 @@ export default function usePhotoboothState({
       ids.push(
         setTimeout(() => {
           photoboothStateDispatch({ type: "nextStatus" });
-        }, FLASH_TIME_IN_MS)
+        }, FLASH_TIME_IN_MS),
       );
     }
 
@@ -276,7 +276,7 @@ export default function usePhotoboothState({
       ids.push(
         setTimeout(() => {
           photoboothStateDispatch({ type: "nextStatus" });
-        }, PREVIEW_TIME_IN_MS)
+        }, PREVIEW_TIME_IN_MS),
       );
     }
 

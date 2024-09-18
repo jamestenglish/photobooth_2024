@@ -70,34 +70,34 @@ export default function CapturePreview({
   if (isCapturePreview && lastImg !== undefined) {
     return (
       <>
-        <div className="grid z-10 col-start-1 col-span-3 row-start-1 row-span-3 justify-center items-center bg-white">
+        <div className="z-10 col-span-3 col-start-1 row-span-3 row-start-1 grid items-center justify-center bg-white">
           <img src={lastImg} className="my-auto" />
         </div>
         {index === 0 && (
-          <div className="grid z-20 col-start-1 col-span-1 row-start-2 row-span-1 justify-center items-center">
+          <div className="z-20 col-span-1 col-start-1 row-span-1 row-start-2 grid items-center justify-center">
             <img src={yetiLove1} className="ml-16" />
           </div>
         )}
 
         {index === 1 && (
-          <div className="grid z-20 col-start-3 col-span-1 row-start-2 row-span-1 justify-center items-center">
+          <div className="z-20 col-span-1 col-start-3 row-span-1 row-start-2 grid items-center justify-center">
             <img src={yetiLove2} className="my-auto" />
           </div>
         )}
 
         {index === 2 && (
-          <div className="mt-40 grid z-20 col-start-2 col-span-2 row-start-1 row-span-3 justify-center items-center">
+          <div className="z-20 col-span-2 col-start-2 row-span-3 row-start-1 mt-40 grid items-center justify-center">
             <img src={yetiLove3} className="ml-36" />
           </div>
         )}
         {index === 3 && (
-          <div className="grid z-20 col-start-1 col-span-1 row-start-2 row-span-1 justify-center items-center">
+          <div className="z-20 col-span-1 col-start-1 row-span-1 row-start-2 grid items-center justify-center">
             <img src={yetiPeek1} className="ml-[58px]" />
           </div>
         )}
         {index === 4 && (
-          <div className="grid z-20 col-start-3 col-span-3 row-start-1 row-span-3 justify-center items-center">
-            <img src={yetiPeek2} className="max-h-[400px] ml-[120px]" />
+          <div className="z-20 col-span-3 col-start-3 row-span-3 row-start-1 grid items-center justify-center">
+            <img src={yetiPeek2} className="ml-[120px] max-h-[400px]" />
           </div>
         )}
       </>

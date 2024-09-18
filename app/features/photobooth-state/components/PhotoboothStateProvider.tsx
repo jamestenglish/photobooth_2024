@@ -26,11 +26,11 @@ export type PhotoboothAnimationRefsType = {
 
 const PhotoboothStatusContext = createContext<StatusType>("ready");
 const PhotoboothMethodsContext = createContext<PhotoboothMethodsType | {}>(
-  {}
+  {},
 ) as React.Context<PhotoboothMethodsType>;
 
 const PhotoboothImagesContext = createContext<PhotoboothImagesType | {}>(
-  {}
+  {},
 ) as React.Context<PhotoboothImagesType>;
 
 const PhotoboothAnimationRefsContext = createContext<

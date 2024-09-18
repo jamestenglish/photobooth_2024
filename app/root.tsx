@@ -35,6 +35,7 @@ const group = (name: string, ...rest: any[]) => {
 
   groups.push(name);
   groupOrig(name, ...rest);
+  12;
 };
 
 const groupEnd = () => {

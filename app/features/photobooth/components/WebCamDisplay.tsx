@@ -33,7 +33,7 @@ export default function WebCamDisplay({
 
   return (
     <>
-      <div className="border-dkblue border-4 min-h-[571px]">
+      <div className="min-h-[571px] border-4 border-dkblue">
         <Webcam
           height={WEBCAM_HEIGHT}
           width={WEBCAM_WIDTH}
@@ -46,19 +46,19 @@ export default function WebCamDisplay({
 
       {status === "ready" && (
         <button
-          className="inline-flex items-center my-12 text-6xl bg-transparent  text-dkblue py-4 px-6 border-4 border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+          className="mountains-of-christmas-bold my-12 inline-flex items-center rounded-3xl border-4 border-dkblue bg-transparent px-6 py-4 text-6xl text-dkblue hover:bg-ltblue"
           onClick={capture}
         >
           <img
             src={icon4}
             alt="yeti icon"
-            className="fill-current w-14 h-14 mr-2"
+            className="mr-2 h-14 w-14 fill-current"
           />
           <span>Take Pictures</span>
           <img
             src={icon4}
             alt="yeti icon"
-            className="fill-current w-14 h-14 ml-2"
+            className="ml-2 h-14 w-14 fill-current"
           />
         </button>
       )}

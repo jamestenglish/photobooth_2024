@@ -5,11 +5,11 @@ import icon2 from "~/images/yeti-paint-icons-2.png";
 export default function PrintForm({ file }: { file: string }) {
   return (
     <>
-      <div className="mt-12 flex justify-center items-center grid row-start-3 col-start-1 col-span-3 ">
+      <div className="col-span-3 col-start-1 row-start-3 mt-12 flex grid items-center justify-center">
         <Form id="printer-form" method="post">
           <input defaultValue={file} name="imgSrc" type="hidden" />
           <button
-            className="inline-flex items-center my-12 text-8xl bg-pastel  text-dkblue py-4 px-6 border-4 border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
+            className="mountains-of-christmas-bold my-12 inline-flex items-center rounded-3xl border-4 border-dkblue bg-pastel px-6 py-4 text-8xl text-dkblue hover:bg-ltblue"
             type="submit"
             name="intent"
             value="print"
@@ -17,13 +17,13 @@ export default function PrintForm({ file }: { file: string }) {
             <img
               src={icon1}
               alt="yeti icon"
-              className="fill-current w-24 h-24 mr-2"
+              className="mr-2 h-24 w-24 fill-current"
             />
             <span>Print!</span>
             <img
               src={icon2}
               alt="yeti icon"
-              className="fill-current w-24 h-24 ml-2"
+              className="ml-2 h-24 w-24 fill-current"
             />
           </button>
         </Form>

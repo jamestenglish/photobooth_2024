@@ -50,7 +50,7 @@ export default function Canvas() {
   const useLayoutEffectYetiBgIndiciesDependencies = [1, 2, 3].map(
     (_, index) => {
       return yetiBgIndicies[index] ?? null;
-    }
+    },
   );
 
   useLayoutEffect(() => {
