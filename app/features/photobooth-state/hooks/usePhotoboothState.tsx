@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useEffect, useMemo } from "react";
+import { useCallback, useReducer, useEffect, useMemo, useState } from "react";
 import { FLASH_TIME_IN_MS, PREVIEW_TIME_IN_MS } from "~/constants";
 import { AnimationStatusType } from "./useAnimation";
 import { YETIS } from "~/constants";
@@ -18,7 +18,7 @@ export type StatusType =
   | "noop";
 
 type YetiizeFinishPayloadType = {
-  imgSrc: string;
+  imgBgRemovedSrc: string;
   index: number;
 };
 
@@ -27,8 +27,8 @@ export type ActionsType =
   | { type: "yetiizeStart" }
   | { type: "yetiizeFinish"; payload: YetiizeFinishPayloadType }
   | { type: "captureImg"; payload: string }
-  | { type: "setOrigImg"; payload: number }
-  | { type: "setBgImg"; payload: number }
+  | { type: "setOriginalImg"; payload: number }
+  | { type: "setBgRemovedImg"; payload: number }
   | { type: "shuffleYetiBgIndex"; payload: number };
 
 type ActionType = ActionsType[keyof ActionsType];
@@ -36,9 +36,9 @@ type ActionType = ActionsType[keyof ActionsType];
 export type StateType = {
   status: StatusType;
   imgIndex: 0 | 1 | 2;
-  imgs: Array<string>;
-  origImgs: Array<string>;
-  bgImgs: Array<string>;
+  images: Array<string>;
+  origImages: Array<string>;
+  bgRemovedImages: Array<string>;
   yetiBgIndicies: Array<number>;
 };
 
@@ -53,10 +53,10 @@ const statusMap: StatusMapType = {
   captureFlash: (state) => "capture",
   capture: (state) => "capturePreview",
   capturePreview: (state) => {
-    const { imgs } = state;
+    const { images } = state;
 
     const capturePreviewNext =
-      imgs.length < 3 ? "countdown" : capturePreviewNextStatus;
+      images.length < 3 ? "countdown" : capturePreviewNextStatus;
     return capturePreviewNext;
   },
   animateStart: (state) => "animateInProgress",
@@ -96,10 +96,10 @@ function replace<Type>({
 
 const initialState: StateType = {
   imgIndex: 0,
-  imgs: [],
+  images: [],
   status: "ready",
-  origImgs: [],
-  bgImgs: [],
+  origImages: [],
+  bgRemovedImages: [],
   yetiBgIndicies: [
     getRandomInt(YETIS.length),
     getRandomInt(YETIS.length),
@@ -122,8 +122,8 @@ const getNextStatus = ({
 const noAdvanceStatusActions: Array<ActionType> = [
   "captureImg",
   "shuffleYetiBgIndex",
-  "setOrigImg",
-  "setBgImg",
+  "setOriginalImg",
+  "setBgRemovedImg",
 ];
 
 function reducerInner(state: StateType, action: ActionsType): StateType {
@@ -135,31 +135,31 @@ function reducerInner(state: StateType, action: ActionsType): StateType {
   //   `reducer || shouldAdvance: ${!noAdvanceStatusActions.includes(action.type)} | type: ${action.type} | currentStatus: ${state.status} | nextStatus: ${nextStatus}`,
   //   { action, state }
   // );
-  const { imgs } = state;
+  const { images } = state;
   switch (action.type) {
     case "yetiizeFinish":
       const { payload: payloadYetiizeFinish } = action;
-      const { index, imgSrc } = payloadYetiizeFinish;
-      const bgImgs = replace<string>({
+      const { index, imgBgRemovedSrc } = payloadYetiizeFinish;
+      const bgRemovedImages = replace<string>({
         index,
-        array: state.bgImgs,
-        value: imgSrc,
+        array: state.bgRemovedImages,
+        value: imgBgRemovedSrc,
       });
 
-      let newYetiizeImgs = [...state.imgs] as Array<string>;
-      if (bgImgs[index] !== null) {
-        newYetiizeImgs = replace<string>({
+      let newYetiizeImages = [...state.images] as Array<string>;
+      if (bgRemovedImages[index] !== null) {
+        newYetiizeImages = replace<string>({
           index,
-          array: state.imgs,
-          value: bgImgs[index],
+          array: state.images,
+          value: bgRemovedImages[index],
         });
       }
 
       return {
         ...state,
         status: nextStatus,
-        bgImgs: bgImgs,
-        imgs: newYetiizeImgs,
+        bgRemovedImages: bgRemovedImages,
+        images: newYetiizeImages,
       };
 
     case "nextStatus":
@@ -167,34 +167,39 @@ function reducerInner(state: StateType, action: ActionsType): StateType {
     case "yetiizeStart":
       return { ...state, status: "yetiizeStart" };
     // -------- types that don't change status
-    case "setOrigImg":
+    case "setOriginalImg":
       const { payload: setOrigImgIndex } = action;
-      const newSetOrigImgs = replace<string>({
+      const newSetOrigImages = replace<string>({
         index: setOrigImgIndex,
-        array: state.imgs,
-        value: state.origImgs[setOrigImgIndex],
+        array: state.images,
+        value: state.origImages[setOrigImgIndex],
       });
       return {
         ...state,
-        imgs: newSetOrigImgs,
+        images: newSetOrigImages,
       };
-    case "setBgImg":
-      const { payload: setBgImgIndex } = action;
-      const newSetBgImgs = replace<string>({
-        index: setBgImgIndex,
-        array: state.imgs,
-        value: state.bgImgs[setBgImgIndex],
+    case "setBgRemovedImg":
+      const { payload: setBgRemovedImgIndex } = action;
+      const newSetBgRemovedImages = replace<string>({
+        index: setBgRemovedImgIndex,
+        array: state.images,
+        value: state.bgRemovedImages[setBgRemovedImgIndex],
       });
       return {
         ...state,
-        imgs: newSetBgImgs,
+        images: newSetBgRemovedImages,
       };
     case "captureImg":
       const { payload: payloadCaptureImg } = action;
-      const newImgs = [...imgs, payloadCaptureImg];
-      const newBgImgs = newImgs.map(() => "");
+      const newImages = [...images, payloadCaptureImg];
+      const newBgRemovedImages = newImages.map(() => "");
 
-      return { ...state, imgs: newImgs, origImgs: newImgs, bgImgs: newBgImgs };
+      return {
+        ...state,
+        images: newImages,
+        origImages: newImages,
+        bgRemovedImages: newBgRemovedImages,
+      };
 
     case "shuffleYetiBgIndex":
       const captureIndex = action.payload;
@@ -238,18 +243,22 @@ export default function usePhotoboothState({
   animationStatus: AnimationStatusType;
 }) {
   const [state, photoboothStateDispatch] = useReducer(reducer, initialState);
+  const [finalImg, setFinalImg] = useState<string>("");
   const {
     status: statusRaw,
-    imgs: imgsRaw,
-    origImgs: origImgsRaw,
-    bgImgs: bgImgsRaw,
+    images: imagesRaw,
+    origImages: origImagesRaw,
+    bgRemovedImages: bgRemovedImagesRaw,
     yetiBgIndicies: yetiBgIndiciesRaw,
   } = state;
 
   const status = useMemo(() => statusRaw, [statusRaw]);
-  const imgs = useMemo(() => imgsRaw, [imgsRaw]);
-  const origImgs = useMemo(() => origImgsRaw, [origImgsRaw]);
-  const bgImgs = useMemo(() => bgImgsRaw, [bgImgsRaw]);
+  const images = useMemo(() => imagesRaw, [imagesRaw]);
+  const origImages = useMemo(() => origImagesRaw, [origImagesRaw]);
+  const bgRemovedImages = useMemo(
+    () => bgRemovedImagesRaw,
+    [bgRemovedImagesRaw]
+  );
   const yetiBgIndicies = useMemo(() => yetiBgIndiciesRaw, [yetiBgIndiciesRaw]);
 
   useEffect(() => {
@@ -296,10 +305,12 @@ export default function usePhotoboothState({
 
   return {
     status,
-    imgs,
-    origImgs,
-    bgImgs,
+    images,
+    origImages,
+    bgRemovedImages,
     yetiBgIndicies,
     photoboothStateDispatch,
+    finalImg,
+    setFinalImg,
   };
 }

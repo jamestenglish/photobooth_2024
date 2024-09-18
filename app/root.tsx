@@ -6,6 +6,15 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import "./tailwind.css";
+// import { useLayoutEffect as useLayoutEffectOrig } from "react";
+
+// const canUseDOM = !!(
+//   typeof window !== "undefined" &&
+//   window.document &&
+//   window.document.createElement
+// );
+
+// const useLayoutEffect = canUseDOM ? useLayoutEffectOrig : () => {};
 
 const groups: Array<string> = [];
 
@@ -51,6 +60,21 @@ console.log = log;
 console.groupEnd = groupEnd;
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  // useLayoutEffect(() => {
+  //   const fullScreen = () => {
+  //     const body = document.getElementsByTagName("body")[0];
+  //     const rect = body.getBoundingClientRect();
+  //     const { height } = rect;
+  //     console.log({ ...rect, height });
+  //     if (height < 1000) {
+  //       console.log("requesting full screen");
+  //       body.requestFullscreen();
+  //     }
+  //   };
+  //   const id = setTimeout(() => fullScreen(), 1000);
+  //   return () => clearTimeout(id);
+  // }, []);
+
   return (
     <html lang="en">
       <head>

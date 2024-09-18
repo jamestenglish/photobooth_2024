@@ -1,19 +1,19 @@
 import { removeBackground } from "@imgly/background-removal";
 
 export async function processImage({
-  imageBase64Url,
+  imgSrc,
   name,
 }: {
-  imageBase64Url: string;
+  imgSrc: string;
   name: string;
 }): Promise<File> {
-  const imgBlob = await removeBackground(imageBase64Url, {
+  const imageBlob = await removeBackground(imgSrc, {
     output: { quality: 1 },
     device: "cpu",
     debug: true,
   });
 
-  const processedFile = new File([imgBlob], `${name}-bg-blasted.png`, {
+  const processedFile = new File([imageBlob], `${name}-bg-blasted.png`, {
     type: "image/png",
   });
   return processedFile;

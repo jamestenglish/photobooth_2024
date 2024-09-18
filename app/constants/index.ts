@@ -47,9 +47,49 @@ import yeti23 from "~/images/yeti-6-biggest.png";
 import yeti24 from "~/images/yeti-7-biggest.png";
 import yeti25 from "~/images/yeti-8-biggest.png";
 import yeti26 from "~/images/yeti-9-biggest.png";
+import { StatusType } from "~/features/photobooth-state/hooks/usePhotoboothState";
 
 export const MOCK_PRINT = true;
 // export const MOCK_PRINT = false;
+
+export const IS_PRINTER = false;
+
+export const SCREEN_HEIGHT = 800;
+export const SCREEN_WIDTH = 1280;
+
+export const CAMERA_WIDTH_ASPECT = 3;
+export const CAMERA_HEIGHT_ASPECT = 4;
+
+export const WEBCAM_HEIGHT = Math.trunc((5 / 7) * SCREEN_HEIGHT);
+export const WEBCAM_WIDTH = Math.trunc(WEBCAM_HEIGHT * (4 / 3));
+
+console.log({ SCREEN_HEIGHT, SCREEN_WIDTH, WEBCAM_HEIGHT, WEBCAM_WIDTH });
+
+// export const COUNTDOWN_TIME_IN_MS = 1000;
+export const COUNTDOWN_TIME_IN_MS = 500;
+
+export const FLASH_TIME_IN_MS = 200;
+// export const FLASH_TIME_IN_MS = 20000;
+
+// export const PREVIEW_TIME_IN_MS = 3000;
+export const PREVIEW_TIME_IN_MS = 500;
+
+// export const ANIMATION_DURATION_MS = 2000;
+export const ANIMATION_DURATION_MS = 1000;
+
+export const MAX_HEIGHT_TARGET_RM = 26;
+export const MAX_HEIGHT_START_RM = 12;
+export const COLUMN_GAP_TARGET_RM = 0.5;
+export const COLUMN_GAP_START_RM = 0.5;
+
+// 2592x1944 4:3
+
+export const YETIIZE_STATUSES: StatusType[] = [
+  "yetiizeReady",
+  "yetiizeStart",
+  "yetiizeFinish",
+  // "print",
+];
 
 export const YETIS = [
   yeti1,
@@ -102,44 +142,4 @@ export const YETIS = [
   yeti18b,
   yeti19,
   yeti19b,
-];
-
-export const SCREEN_HEIGHT = 800;
-export const SCREEN_WIDTH = 1280;
-
-export const CAMERA_WIDTH_ASPECT = 3;
-export const CAMERA_HEIGHT_ASPECT = 4;
-
-export const WEBCAM_HEIGHT = Math.trunc((5 / 7) * SCREEN_HEIGHT);
-export const WEBCAM_WIDTH = Math.trunc(WEBCAM_HEIGHT * (4 / 3));
-
-console.log({ SCREEN_HEIGHT, SCREEN_WIDTH, WEBCAM_HEIGHT, WEBCAM_WIDTH });
-
-export const COUNTDOWN_TIME_IN_MS = 1000;
-// export const COUNTDOWN_TIME_IN_MS = 100;
-
-export const FLASH_TIME_IN_MS = 200;
-// export const FLASH_TIME_IN_MS = 20000;
-
-export const PREVIEW_TIME_IN_MS = 3000;
-// export const PREVIEW_TIME_IN_MS = 500;
-
-export const MAX_HEIGHT_TARGET_RM = 26;
-export const MAX_HEIGHT_START_RM = 12;
-export const COLUMN_GAP_TARGET_RM = 0.5;
-export const COLUMN_GAP_START_RM = 0.5;
-
-// export const ANIMATION_DURATION_MS = 2000;
-export const ANIMATION_DURATION_MS = 2000;
-
-// 2592x1944 4:3
-
-export const YETIIZE_STATUSES = [
-  "yetiizeReady",
-  "yetiizeStart",
-  "yetiizeFinish",
-  "shuffleYetiBgIndex",
-  "setOrigImg",
-  "setBgImg",
-  "print",
 ];

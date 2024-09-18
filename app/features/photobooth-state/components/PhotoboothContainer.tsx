@@ -1,8 +1,14 @@
 import Photobooth from "~/features/photobooth/components/Photobooth";
 import PhotoboothStateProvider from "./PhotoboothStateProvider";
 import useAnimation from "~/features/photobooth-state/hooks/useAnimation";
+import WindowConstraint from "~/features/wip/components/WindowContraint";
+import Canvas from "~/features/canvas/components/Canvas";
 
-export default function PhotoboothContainer() {
+export default function PhotoboothContainer({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const {
     previousCapturesContainerRef,
     containerRef,
@@ -18,7 +24,12 @@ export default function PhotoboothContainer() {
       containerRef={containerRef}
       webcamDisplayRef={webcamDisplayRef}
     >
-      <Photobooth />
+      <WindowConstraint>{children}</WindowConstraint>
+      <Canvas />
     </PhotoboothStateProvider>
   );
 }
+
+// TODO JTE back button on printform
+// TODO JTE print status
+// TODO JTE full screen button

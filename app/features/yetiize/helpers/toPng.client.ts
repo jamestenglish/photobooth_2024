@@ -1,13 +1,13 @@
 import { RawImage } from "@huggingface/transformers";
 
 export default async function toPng({
-  imageBase64Url,
+  imgSrc,
   name,
 }: {
-  imageBase64Url: string;
+  imgSrc: string;
   name: string;
 }): Promise<string> {
-  const img = await RawImage.fromURL(imageBase64Url);
+  const img = await RawImage.fromURL(imgSrc);
 
   // Create new canvas
   const canvas = document.createElement("canvas");

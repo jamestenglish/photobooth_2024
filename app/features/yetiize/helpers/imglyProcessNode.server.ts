@@ -9,27 +9,27 @@ import { removeBackground } from "@imgly/background-removal-node";
 //   return bytes.buffer;
 // }
 export async function processImage({
-  imageBase64Url,
+  imgSrc,
   name,
 }: {
-  imageBase64Url: string;
+  imgSrc: string;
   name: string;
 }): Promise<File | null> {
   try {
-    console.log({ imageBase64Url, contains: imageBase64Url.includes("%") });
-    const buf = Buffer.from(imageBase64Url, "base64url");
-    const bufB = Buffer.from(imageBase64Url, "base64");
+    console.log({ imgSrc, contains: imgSrc.includes("%") });
+    const buf = Buffer.from(imgSrc, "base64url");
+    const bufB = Buffer.from(imgSrc, "base64");
     // @ts-ignore
-    const bufC = Buffer.from(imageBase64Url.split(",")[1], "base64");
+    const bufC = Buffer.from(imgSrc.split(",")[1], "base64");
     const uint = Uint8Array.from(buf);
-    const url = new URL(imageBase64Url);
+    const url = new URL(imgSrc);
     const photoSrcBlob = new Blob([bufC], {
       type: "image/jpeg",
     });
     console.log("--------------");
 
     const arrayBuf = await photoSrcBlob.arrayBuffer();
-    // const ab2 = base64ToArrayBuffer(imageBase64Url);
+    // const ab2 = base64ToArrayBuffer(imgSrc);
     const imgBlob = await removeBackground(photoSrcBlob, {
       output: { quality: 1 },
     });

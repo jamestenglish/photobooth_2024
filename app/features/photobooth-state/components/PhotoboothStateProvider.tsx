@@ -7,13 +7,15 @@ import { AnimationStatusType } from "~/features/photobooth-state/hooks/useAnimat
 
 export type PhotoboothMethodsType = {
   photoboothStateDispatch: React.Dispatch<ActionsType>;
+  setFinalImg: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export type PhotoboothImagesType = {
-  imgs: Array<string>;
-  origImgs: Array<string>;
-  bgImgs: Array<string>;
+  images: Array<string>;
+  origImages: Array<string>;
+  bgRemovedImages: Array<string>;
   yetiBgIndicies: Array<number>;
+  finalImg: string;
 };
 
 export type PhotoboothAnimationRefsType = {
@@ -27,7 +29,7 @@ const PhotoboothMethodsContext = createContext<PhotoboothMethodsType | {}>(
   {}
 ) as React.Context<PhotoboothMethodsType>;
 
-const PhotoboothImgsContext = createContext<PhotoboothImagesType | {}>(
+const PhotoboothImagesContext = createContext<PhotoboothImagesType | {}>(
   {}
 ) as React.Context<PhotoboothImagesType>;
 
@@ -52,22 +54,30 @@ export default function PhotoboothStateProvider({
 }) {
   const {
     status,
-    imgs,
-    origImgs,
-    bgImgs,
+    images,
+    origImages,
+    bgRemovedImages,
     yetiBgIndicies,
     photoboothStateDispatch,
+    finalImg,
+    setFinalImg,
   } = usePhotoboothState({
     startAnimation,
     animationStatus,
   });
 
-  // I don't really think this is necessary
-  const methodsValue = useMemo(() => {
-    return { photoboothStateDispatch };
-  }, [photoboothStateDispatch]);
+  const methodsValue: PhotoboothMethodsType = {
+    photoboothStateDispatch,
+    setFinalImg,
+  };
 
-  const imgsValue = { imgs, origImgs, bgImgs, yetiBgIndicies };
+  const imagesValue: PhotoboothImagesType = {
+    images,
+    origImages,
+    bgRemovedImages,
+    yetiBgIndicies,
+    finalImg,
+  };
   const animationRefs = {
     containerRef,
     previousCapturesContainerRef,
@@ -78,9 +88,9 @@ export default function PhotoboothStateProvider({
     <PhotoboothAnimationRefsContext.Provider value={animationRefs}>
       <PhotoboothMethodsContext.Provider value={methodsValue}>
         <PhotoboothStatusContext.Provider value={status}>
-          <PhotoboothImgsContext.Provider value={imgsValue}>
+          <PhotoboothImagesContext.Provider value={imagesValue}>
             {children}
-          </PhotoboothImgsContext.Provider>
+          </PhotoboothImagesContext.Provider>
         </PhotoboothStatusContext.Provider>
       </PhotoboothMethodsContext.Provider>
     </PhotoboothAnimationRefsContext.Provider>
@@ -96,7 +106,7 @@ export function usePhotoboothStateMethods() {
 }
 
 export function usePhotoboothImages() {
-  return useContext(PhotoboothImgsContext);
+  return useContext(PhotoboothImagesContext);
 }
 
 export function useAnimationRefs() {

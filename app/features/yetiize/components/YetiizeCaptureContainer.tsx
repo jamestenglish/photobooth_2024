@@ -20,97 +20,78 @@ const sadIcons = [sadIcon1, sadIcon2, sadIcon3];
 
 import { action } from "~/routes/_index";
 
-// const proccessImageBg = async ({
-//   src,
-//   index,
-//   photoboothStateDispatch,
-// }: {
-//   photoboothStateDispatch: Dispatch<ActionsType>;
-//   index: number;
-//   src: string;
-// }) => {
-//   try {
-//     const resultFile = await processImage({
-//       imageBase64Url: src,
-//       name: `${index}`,
-//     });
-
-//     const b64 = URL.createObjectURL(resultFile);
-
-//     photoboothStateDispatch({
-//       type: "yetiizeFinish",
-//       payload: { imgSrc: b64, index },
-//     });
-//   } catch (err) {
-//     // TODO JTE handle error
-//     photoboothStateDispatch({
-//       type: "yetiizeFinish",
-//       payload: { imgSrc: "error", index },
-//     });
-//   }
-// };
-
 export default function YetiizeCaptureContainer({
-  src,
+  imgSrc,
   index,
-  bgImgSrc,
+  bgRemovedImgSrc,
 }: {
-  src: string;
+  imgSrc: string;
   index: number;
-  bgImgSrc: string;
+  bgRemovedImgSrc: string;
 }) {
   const { photoboothStateDispatch } = usePhotoboothStateMethods();
-  const { yetiBgIndicies, origImgs } = usePhotoboothImages();
+  const { yetiBgIndicies, origImages } = usePhotoboothImages();
   const yetiBgIndex = yetiBgIndicies[index];
-  const origImg = origImgs[index];
+  const origImg = origImages[index];
 
   const status = usePhotoboothStatus();
-  const isBgEmpty = bgImgSrc.length === 0;
-  const doesBgMatch = bgImgSrc === src && !isBgEmpty;
+  const isBgRemovedImgEmpty = bgRemovedImgSrc.length === 0;
+  const doesBgRemovedMatchSrc =
+    bgRemovedImgSrc === imgSrc && !isBgRemovedImgEmpty;
 
   const fetcher = useFetcher<typeof action>();
   const { state, data } = fetcher;
-  const imageBase64Url = data?.imageBase64Url ?? "";
+  const imgBgRemovedSrcResult = data?.imgBgRemovedSrcResult ?? "";
   const formResultIndex = data?.index ?? `${index}`;
 
   useEffect(() => {
+    console.group("YetiizeCaptureContainer useEffect");
     console.log(
-      `formResultIndex: ${formResultIndex} | isBgEmpty: ${isBgEmpty} | state: ${state} | status: ${status} | imageBase64Url: ${imageBase64Url?.length}`
+      `formResultIndex: ${formResultIndex} | isBgRemovedImgEmpty: ${isBgRemovedImgEmpty} | state: ${state} | status: ${status} | imgBgRemovedSrcResult: ${imgBgRemovedSrcResult?.length}`
     );
 
     console.log(
-      `1: ${formResultIndex === `${index}`} | 2: ${isBgEmpty} | 3: ${state === "submitting"} | 4: ${
-        status === "yetiizeStart" && state === "idle" && imageBase64Url !== ""
+      `1: ${formResultIndex === `${index}`} | 2: ${isBgRemovedImgEmpty} | 3: ${state === "submitting"} | 4: ${
+        status === "yetiizeStart" &&
+        state === "idle" &&
+        imgBgRemovedSrcResult !== ""
       }`
     );
     if (formResultIndex === `${index}`) {
-      console.log(data);
-      if (isBgEmpty) {
+      console.log("data", data);
+      if (isBgRemovedImgEmpty) {
         if (state === "submitting") {
           console.log("dispatch yetiizeStart");
           photoboothStateDispatch({ type: "yetiizeStart" });
         } else if (
           status === "yetiizeStart" &&
           state === "idle" &&
-          imageBase64Url !== ""
+          imgBgRemovedSrcResult !== ""
         ) {
           console.log("dispatch yetiizeFinish");
 
           photoboothStateDispatch({
             type: "yetiizeFinish",
-            payload: { imgSrc: imageBase64Url, index },
+            payload: { imgBgRemovedSrc: imgBgRemovedSrcResult, index },
           });
         }
       }
     }
-  }, [state, status, isBgEmpty, imageBase64Url, formResultIndex]);
+    console.groupEnd();
+  }, [
+    state,
+    status,
+    isBgRemovedImgEmpty,
+    imgBgRemovedSrcResult,
+    formResultIndex,
+  ]);
 
   const onClickYetiize = useCallback(async () => {
     if (status === "yetiizeReady") {
-      if (doesBgMatch) {
+      if (doesBgRemovedMatchSrc) {
         photoboothStateDispatch({ type: "shuffleYetiBgIndex", payload: index });
       } else {
-        // if (isBgEmpty) {
+        // if (isBgRemovedImgEmpty) {
         //   photoboothStateDispatch({ type: "yetiizeStart" });
 
         //   const id = setTimeout(async () => {
@@ -125,17 +106,27 @@ export default function YetiizeCaptureContainer({
         //     return [...prev, id];
         //   });
         // } else {
-        photoboothStateDispatch({ type: "setBgImg", payload: index });
+        photoboothStateDispatch({ type: "setBgRemovedImg", payload: index });
         // }
       }
     }
-  }, [doesBgMatch, isBgEmpty, index, photoboothStateDispatch, status]);
+  }, [
+    doesBgRemovedMatchSrc,
+    isBgRemovedImgEmpty,
+    index,
+    photoboothStateDispatch,
+    status,
+  ]);
 
   const onClickUnYetiize = useCallback(async () => {
-    if (status === "yetiizeReady" && doesBgMatch && !isBgEmpty) {
-      photoboothStateDispatch({ type: "setOrigImg", payload: index });
+    if (
+      status === "yetiizeReady" &&
+      doesBgRemovedMatchSrc &&
+      !isBgRemovedImgEmpty
+    ) {
+      photoboothStateDispatch({ type: "setOriginalImg", payload: index });
     }
-  }, [doesBgMatch, isBgEmpty, index, status]);
+  }, [doesBgRemovedMatchSrc, isBgRemovedImgEmpty, index, status]);
 
   return (
     <div className="flex flex-col gap-6 items-center mt-6">
@@ -148,11 +139,11 @@ export default function YetiizeCaptureContainer({
         </div>
         <img
           className="border-2 border-dkblue preview-img object-scale-down row-start-1 col-start-1 "
-          src={src}
+          src={imgSrc}
         />
       </div>
 
-      {bgImgSrc !== "" && (
+      {bgRemovedImgSrc !== "" && (
         <button
           disabled={status !== "yetiizeReady"}
           onClick={onClickYetiize}
@@ -166,13 +157,13 @@ export default function YetiizeCaptureContainer({
           <span>Yeti-ize!</span>
         </button>
       )}
-      {isBgEmpty && (
+      {isBgRemovedImgEmpty && (
         <fetcher.Form
           id={`yetiize-form-${index}`}
           key={`yetiize-form-${index}`}
           method="post"
         >
-          <input defaultValue={origImg} name="imageBase64Url" type="hidden" />
+          <input defaultValue={origImg} name="imgSrc" type="hidden" />
           <input defaultValue={index} name="index" type="hidden" />
 
           <button
@@ -190,7 +181,7 @@ export default function YetiizeCaptureContainer({
           </button>
         </fetcher.Form>
       )}
-      {doesBgMatch && (
+      {doesBgRemovedMatchSrc && (
         <button
           onClick={onClickUnYetiize}
           className="inline-flex items-center align-center content-center text-3xl  py-2 px-4 border-4 text-pastel border-pastel hover:bg-ltblue hover:text-dkblue rounded-3xl mountains-of-christmas-bold"

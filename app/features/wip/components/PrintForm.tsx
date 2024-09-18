@@ -7,7 +7,7 @@ export default function PrintForm({ file }: { file: string }) {
     <>
       <div className="mt-12 flex justify-center items-center grid row-start-3 col-start-1 col-span-3 ">
         <Form id="printer-form" method="post">
-          <input defaultValue={file} name="imageBase64Url" type="hidden" />
+          <input defaultValue={file} name="imgSrc" type="hidden" />
           <button
             className="inline-flex items-center my-12 text-8xl bg-pastel  text-dkblue py-4 px-6 border-4 border-dkblue hover:bg-ltblue rounded-3xl mountains-of-christmas-bold"
             type="submit"

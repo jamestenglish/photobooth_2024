@@ -1,3 +1,5 @@
+import { YETIS } from "~/constants";
+
 export function createImageLoadPromise(img: HTMLImageElement) {
   return new Promise((resolve) => {
     img.onload = () => {
@@ -5,6 +7,7 @@ export function createImageLoadPromise(img: HTMLImageElement) {
     };
   });
 }
+
 const SETTINGS = {
   WIDTH: 1200,
   HEIGHT: 1800,
@@ -22,18 +25,18 @@ const SETTINGS = {
 
 export default async function drawCanvas({
   promiseRef,
-  imgs,
+  images,
   snipPng,
-  yetiImgs,
+  yetiBgImages,
   yetiBgIndicies,
-  setFile,
+  setFinalImg,
 }: {
   promiseRef: React.MutableRefObject<Promise<void>[]>;
-  imgs: string[];
+  images: string[];
   snipPng: string;
-  yetiImgs: HTMLImageElement[];
+  yetiBgImages: HTMLImageElement[];
   yetiBgIndicies: number[];
-  setFile: React.Dispatch<React.SetStateAction<string>>;
+  setFinalImg: React.Dispatch<React.SetStateAction<string>>;
 }) {
   await Promise.all(promiseRef.current);
   promiseRef.current = [Promise.resolve()];
@@ -42,14 +45,14 @@ export default async function drawCanvas({
   console.log({ foo: promiseRef.current[0] });
   console.log("drawing canvas");
   const snipImg = new Image();
-  const templateImgs = [new Image(), new Image(), new Image()];
+  const templateImages = [new Image(), new Image(), new Image()];
 
-  const promises = [...templateImgs, snipImg].map((img) => {
+  const promises = [...templateImages, snipImg].map((img) => {
     return createImageLoadPromise(img);
   });
 
-  templateImgs.forEach((img, index) => {
-    img.src = imgs[index];
+  templateImages.forEach((img, index) => {
+    img.src = images[index];
   });
 
   snipImg.src = snipPng;
@@ -80,21 +83,21 @@ export default async function drawCanvas({
         );
         // ctx.reset();
 
-        const yetiImage = yetiImgs[yetiBgIndicies[index]];
+        const yetiBgImg = yetiBgImages[yetiBgIndicies[index]];
 
         ctx.drawImage(
-          yetiImage,
+          yetiBgImg,
           0,
           0,
-          yetiImage.width,
-          (SETTINGS.PICTURE_HEIGHT / SETTINGS.PICTURE_WIDTH) * yetiImage.height,
+          yetiBgImg.width,
+          (SETTINGS.PICTURE_HEIGHT / SETTINGS.PICTURE_WIDTH) * yetiBgImg.height,
           SETTINGS.INITIAL_X + offset,
           y,
           SETTINGS.PICTURE_WIDTH,
           SETTINGS.PICTURE_HEIGHT
         );
         ctx.drawImage(
-          templateImgs[index],
+          templateImages[index],
           SETTINGS.INITIAL_X + offset,
           y,
           SETTINGS.PICTURE_WIDTH,
@@ -144,6 +147,73 @@ export default async function drawCanvas({
       "image/png"
     );
   });
-  setFile(canvas.toDataURL("image/jpeg"));
+  setFinalImg(canvas.toDataURL("image/jpeg"));
   console.groupEnd();
 }
+
+export async function loadFonts(fontsToLoad: any) {
+  if (fontsToLoad.length) {
+    for (let i = 0; i < fontsToLoad.length; i++) {
+      let fontProps = fontsToLoad[i];
+      let fontFamily = fontProps["font-family"];
+      let fontWeight = fontProps["font-weight"];
+      let fontStyle = fontProps["font-style"];
+      let fontUrl = Array.isArray(fontProps["src"])
+        ? fontProps["src"][0][0]
+        : fontProps["src"];
+      if (fontUrl.indexOf("url(") === -1) {
+        fontUrl = "url(" + fontUrl + ")";
+      }
+      let fontFormat = fontProps["src"][0][1] ? fontProps["src"][1] : "";
+      const font = new FontFace(fontFamily, fontUrl);
+      font.weight = fontWeight;
+      font.style = fontStyle;
+      await font.load();
+      document.fonts.add(font);
+
+      // apply font styles to body
+      let fontDOMEl = document.createElement("div");
+      fontDOMEl.textContent = "";
+      document.body.appendChild(fontDOMEl);
+      fontDOMEl.setAttribute(
+        "style",
+        `position:fixed; height:0; width:0; overflow:hidden; font-family:${fontFamily}; font-weight:${fontWeight}; font-style:${fontStyle}`
+      );
+    }
+  }
+}
+const fonts = [
+  {
+    "font-family": "Mountains of Christmas",
+    "font-style": "normal",
+    "font-weight": 700,
+    src: "https://fonts.gstatic.com/s/mountainsofchristmas/v22/3y9z6a4zcCnn5X0FDyrKi2ZRUBIy8uxoUo7eBGqJJPxIO7yLeEE.woff2",
+  },
+];
+
+export const yetiBgImages = YETIS.map(() => new Image());
+
+export const loadStaticAssets = async ({
+  yetiBgImages,
+  setIsStaticLoaded,
+}: {
+  yetiBgImages: HTMLImageElement[];
+  setIsStaticLoaded: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  console.group("static loading");
+  console.log("loading static promises");
+  await loadFonts(fonts);
+
+  const promises = [...yetiBgImages].map((img) => {
+    createImageLoadPromise(img);
+  });
+
+  yetiBgImages.forEach((img, index) => {
+    img.src = YETIS[index];
+  });
+
+  await Promise.all(promises);
+  console.log("DONE loading static promises");
+  setIsStaticLoaded(true);
+  console.groupEnd();
+};

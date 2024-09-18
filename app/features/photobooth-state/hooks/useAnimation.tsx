@@ -35,12 +35,12 @@ export default function useAnimation() {
       ) {
         previousCapturesContainerRef.current.style.columnGap = `${result.value.columnGap}rem`;
 
-        const imgs = Array.from(
+        const images = Array.from(
           previousCapturesContainerRef.current.getElementsByClassName(
             "preview-img"
           )
         );
-        imgs.forEach((el) => {
+        images.forEach((el) => {
           const img = el as HTMLImageElement;
           img.style.maxHeight = `${result.value.maxHeight}rem`;
         });

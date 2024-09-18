@@ -5,8 +5,6 @@ import {
   RawImage,
 } from "@huggingface/transformers";
 
-// TODO JTE move this file somewhere better
-
 const model_id = "Xenova/modnet";
 // @ts-ignore
 env.backends.onnx.wasm.proxy = false;
@@ -17,13 +15,13 @@ const model = await AutoModel.from_pretrained(model_id, {
 const processor = await AutoProcessor.from_pretrained(model_id);
 
 export async function processImage({
-  imageBase64Url,
+  imgSrc,
   name,
 }: {
-  imageBase64Url: string;
+  imgSrc: string;
   name: string;
 }): Promise<File> {
-  const img = await RawImage.fromURL(imageBase64Url);
+  const img = await RawImage.fromURL(imgSrc);
 
   // Pre-process image
   const { pixel_values } = await processor(img);
