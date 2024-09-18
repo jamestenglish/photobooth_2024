@@ -5,7 +5,7 @@ import icon2 from "~/images/yeti-paint-icons-2.png";
 export default function PrintForm({ file }: { file: string }) {
   return (
     <>
-      <div className="col-span-3 col-start-1 row-start-3 mt-12 flex grid items-center justify-center">
+      <div className="col-span-3 col-start-1 row-start-3 mt-12 grid items-center justify-center">
         <Form id="printer-form" method="post">
           <input defaultValue={file} name="imgSrc" type="hidden" />
           <button
