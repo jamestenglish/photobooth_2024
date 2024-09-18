@@ -1,4 +1,4 @@
-import { useState, useEffect, Dispatch, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import {
   usePhotoboothImages,
   usePhotoboothStateMethods,
@@ -12,7 +12,6 @@ import icon3 from "~/images/yeti-camera-icon-3-removebg-preview.png";
 import sadIcon1 from "~/images/sad-yeti-icon-1.png";
 import sadIcon2 from "~/images/sad-yeti-icon-2.png";
 import sadIcon3 from "~/images/sad-yeti-icon-3.png";
-import { ActionsType } from "~/features/photobooth-state/hooks/usePhotoboothState";
 import { useFetcher } from "@remix-run/react";
 
 const icons = [icon1, icon2, icon3];
@@ -91,23 +90,7 @@ export default function YetiizeCaptureContainer({
       if (doesBgRemovedMatchSrc) {
         photoboothStateDispatch({ type: "shuffleYetiBgIndex", payload: index });
       } else {
-        // if (isBgRemovedImgEmpty) {
-        //   photoboothStateDispatch({ type: "yetiizeStart" });
-
-        //   const id = setTimeout(async () => {
-        //     await proccessImageBg({
-        //       src,
-        //       index,
-        //       photoboothStateDispatch,
-        //     });
-        //   }, 1000);
-
-        //   setTimerIds((prev) => {
-        //     return [...prev, id];
-        //   });
-        // } else {
         photoboothStateDispatch({ type: "setBgRemovedImg", payload: index });
-        // }
       }
     }
   }, [

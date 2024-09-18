@@ -1,4 +1,5 @@
 import { YETIS } from "~/constants";
+import { COLORS } from "~/constants/colors";
 
 export function createImageLoadPromise(img: HTMLImageElement) {
   return new Promise((resolve) => {
@@ -16,9 +17,9 @@ const SETTINGS = {
   INITIAL_X: 18,
   X_OFFSET: 600,
   Y_OFFSETS: [30, 477, 922],
-  SECONDARY_COLOR: "#D5E8F2",
-  PRIMARY_COLOR: "#004681",
-  BG_COLOR: "#F6F5FA",
+  SECONDARY_COLOR: COLORS.SECONDARY,
+  PRIMARY_COLOR: COLORS.PRIMARY,
+  BG_COLOR: COLORS.BG,
   FRAME_WIDTH: 8,
   TEXT_OUTLINE_WIDTH: 8,
 } as const;

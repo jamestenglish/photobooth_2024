@@ -9,7 +9,7 @@ export default function PrintForm({ file }: { file: string }) {
         <Form id="printer-form" method="post">
           <input defaultValue={file} name="imgSrc" type="hidden" />
           <button
-            className="mountains-of-christmas-bold my-12 inline-flex items-center rounded-3xl border-4 border-dkblue bg-pastel px-6 py-4 text-8xl text-dkblue hover:bg-ltblue"
+            className="mountains-of-christmas-bold my-12 inline-flex items-center rounded-3xl border-4 border-dkblue bg-pastel px-6 py-4 text-8xl text-ltblue hover:bg-ltblue hover:text-dkblue"
             type="submit"
             name="intent"
             value="print"
