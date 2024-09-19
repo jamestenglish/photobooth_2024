@@ -1,7 +1,5 @@
 import WebCamDisplay from "./WebCamDisplay";
 
-import PreviousCaptures from "./PreviousCaptures";
-import { YETIIZE_STATUSES } from "~/constants";
 import {
   useAnimationRefs,
   usePhotoboothStatus,

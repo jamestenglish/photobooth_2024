@@ -2,11 +2,8 @@ import {
   useLayoutEffect as useLayoutEffectOrig,
   useState,
   useRef,
-  useMemo,
 } from "react";
-import { YETIIZE_STATUSES } from "~/constants";
 
-import { YETIS } from "~/constants";
 import snipPng from "~/images/snip.png";
 import {
   usePhotoboothImages,
@@ -42,7 +39,7 @@ export default function Canvas() {
     });
   }, []);
 
-  // the size of dependencies can't change
+  // the size of dependencies arrays can't change
   const useLayoutEffectImagesDependencies = [1, 2, 3].map((_, index) => {
     return images[index] ?? null;
   });
@@ -54,7 +51,6 @@ export default function Canvas() {
   );
 
   useLayoutEffect(() => {
-    // console.log({ length: images.length, status, yetiBgIndicies });
     if (images.length === 3 && isStaticLoaded) {
       const promise = drawCanvas({
         promiseRef,

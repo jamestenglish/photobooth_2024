@@ -54,8 +54,6 @@ export default function useAnimation() {
     },
     onResolve: () => {
       console.log(`onResolve: ${new Date()}`);
-
-      // setAnimationStatus("ready");
     },
     onRest: () => {
       console.log(`onRest: ${new Date()}`);
@@ -83,7 +81,6 @@ export default function useAnimation() {
     const height =
       webcamDisplayRef?.current?.getBoundingClientRect()?.height ?? 0;
     console.log(`startAnimation: ${new Date()}`);
-    console.log({ top, height });
     api.start({
       to: {
         scrollY: top,

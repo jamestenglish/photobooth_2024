@@ -4,18 +4,21 @@ import {
   type ActionFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
-import { Form, useFetcher, useLoaderData } from "@remix-run/react";
-import { useRef } from "react";
-import { useInterval, useTimeout } from "usehooks-ts";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useInterval } from "usehooks-ts";
 
-import { MOCK_PRINT, PRINTER_URL, PRINTER_POLL_RATE } from "~/constants";
+import {
+  MAX_PRINTER_STATUS_CHECKS,
+  PRINTER_URL,
+  PRINTER_POLL_RATE,
+} from "~/constants";
 import PhotoboothContainer from "~/features/photobooth-state/components/PhotoboothContainer";
 import { getJobAttributes } from "~/features/print/helpers/print.server";
 import PrintingLoading from "~/features/wip/components/PrintingLoading";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Photobooth" },
+    { title: "Photobooth Printing..." },
     { name: "description", content: "Cool photobooth!" },
   ];
 };
@@ -33,20 +36,22 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     const actionUrl = new URL(request.url);
     const count = parseInt(actionUrl.searchParams.get("count") ?? "0");
     console.log({ count });
-    if (count > 3) {
+    if (count > MAX_PRINTER_STATUS_CHECKS) {
       return redirect("/error?error=print-timed-out");
     }
     console.log("action");
-    const formData = await request.formData();
     const jobId = parseInt(params.jobId ?? "");
     const url = PRINTER_URL;
-    // const jobAttributes = await getJobAttributes({ url, jobId });
+    const jobAttributes = await getJobAttributes({ url, jobId });
 
-    // // console.log("\njobAttributes: ");
-    // // console.log({ jobAttributes });
-    // if (jobAttributes?.["job-attributes-tag"]?.["job-state"] === "completed") {
-    //   return redirect("/");
-    // }
+    console.log("\njobAttributes: ");
+    console.log({ jobAttributes });
+
+    const isDone =
+      jobAttributes?.["job-attributes-tag"]?.["job-state"] === "completed";
+    if (isDone) {
+      return redirect("/");
+    }
     return redirect(`/printing/${jobId}?count=${count + 1}`);
   } catch (error) {
     console.error(error);
@@ -58,16 +63,12 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 export default function Printing() {
   const { jobId } = useLoaderData<typeof loader>();
 
-  const buttonRef =
-    useRef<HTMLButtonElement>() as React.MutableRefObject<HTMLButtonElement>;
+  const fetcher = useFetcher<typeof action>();
 
   useInterval(() => {
-    console.log("click");
-    buttonRef?.current?.click();
+    console.log("submit");
+    fetcher.submit({}, { method: "post" });
   }, PRINTER_POLL_RATE);
-
-  const fetcher = useFetcher<typeof action>();
-  const { state, data } = fetcher;
 
   return (
     <>
@@ -78,17 +79,9 @@ export default function Printing() {
 
         <div>{jobId}</div>
       </PhotoboothContainer>
-      <fetcher.Form id="printer-form" method="post">
-        <button
-          ref={buttonRef}
-          className="mountains-of-christmas-bold hidden items-center rounded-3xl border-4 border-dkblue bg-pastel px-6 py-4 text-8xl text-ltblue hover:bg-ltblue hover:text-dkblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
-          type="submit"
-          name="intent"
-          value="print"
-        >
-          <span>Print!</span>
-        </button>
-      </fetcher.Form>
+      {/* <fetcher.Form id="printer-form" method="post" className="hidden">
+        <span className="hidden">Check Status</span>
+      </fetcher.Form> */}
     </>
   );
 }

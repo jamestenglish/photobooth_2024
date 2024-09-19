@@ -1,4 +1,3 @@
-import Photobooth from "~/features/photobooth/components/Photobooth";
 import PhotoboothStateProvider from "./PhotoboothStateProvider";
 import useAnimation from "~/features/photobooth-state/hooks/useAnimation";
 import WindowConstraint from "~/features/wip/components/WindowContraint";
@@ -26,8 +25,11 @@ export default function PhotoboothContainer({
       webcamDisplayRef={webcamDisplayRef}
       resetAnimation={resetAnimation}
     >
-      <WindowConstraint>{children}</WindowConstraint>
-      <Canvas />
+      <WindowConstraint>
+        <>
+          {children} <Canvas />
+        </>
+      </WindowConstraint>
     </PhotoboothStateProvider>
   );
 }
@@ -35,3 +37,4 @@ export default function PhotoboothContainer({
 // TODO JTE back button on printform
 // TODO JTE print status
 // TODO JTE full screen button
+// TODO JTE readme

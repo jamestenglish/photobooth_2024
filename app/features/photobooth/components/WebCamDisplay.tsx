@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
 import { StatusType } from "~/features/photobooth-state/hooks/usePhotoboothState";
 import { WEBCAM_HEIGHT, WEBCAM_WIDTH } from "~/constants";

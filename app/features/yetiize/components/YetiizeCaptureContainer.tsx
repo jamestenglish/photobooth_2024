@@ -13,11 +13,10 @@ import sadIcon1 from "~/images/sad-yeti-icon-1.png";
 import sadIcon2 from "~/images/sad-yeti-icon-2.png";
 import sadIcon3 from "~/images/sad-yeti-icon-3.png";
 import { useFetcher } from "@remix-run/react";
+import { action } from "~/routes/_index";
 
 const icons = [icon1, icon2, icon3];
 const sadIcons = [sadIcon1, sadIcon2, sadIcon3];
-
-import { action } from "~/routes/_index";
 
 export default function YetiizeCaptureContainer({
   imgSrc,
@@ -50,15 +49,12 @@ export default function YetiizeCaptureContainer({
       }
       if (isBgRemovedImgEmpty) {
         if (state === "submitting") {
-          // console.log("dispatch yetiizeStart");
           photoboothStateDispatch({ type: "yetiizeStart" });
         } else if (
           status === "yetiizeStart" &&
           state === "idle" &&
           imgBgRemovedSrcResult !== ""
         ) {
-          // console.log("dispatch yetiizeFinish");
-
           photoboothStateDispatch({
             type: "yetiizeFinish",
             payload: { imgBgRemovedSrc: imgBgRemovedSrcResult, index },
@@ -66,7 +62,6 @@ export default function YetiizeCaptureContainer({
         }
       }
     }
-    // console.groupEnd();
   }, [
     state,
     status,

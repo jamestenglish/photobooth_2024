@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "remix vite:dev --host 0.0.0.0",
+    "dev": "mkdir -p ignore/imgs && remix vite:dev --host 0.0.0.0",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "start": "mkdir -p ignore/imgs && PORT=5173 remix-serve ./build/server/index.js",
+    "typecheck": "tsc",
+    "prod": "npm run build && npm run start"
   },
   "dependencies": {
     "@c_phillips/ipp-browser": "^1.0.0",

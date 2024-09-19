@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useEffect, useMemo, useState } from "react";
+import { useReducer, useEffect, useMemo, useState } from "react";
 import { FLASH_TIME_IN_MS, PREVIEW_TIME_IN_MS } from "~/constants";
 import { AnimationStatusType } from "./useAnimation";
 import { YETIS } from "~/constants";
@@ -66,7 +66,6 @@ const statusMap: StatusMapType = {
   animateInProgress: (state) => "yetiizeReady",
   yetiizeReady: (state) => "print",
   yetiizeStart: (state) => "yetiizeFinish",
-  // TODO JTE: handle error
   yetiizeFinish: (state) => "yetiizeReady",
   resetting: () => "ready",
   print: (state) => "ready",
@@ -78,7 +77,6 @@ function getRandomInt(max: number) {
 }
 function getNextYetiIndex(prevIndex: number) {
   const newIndex = (prevIndex + 1) % YETIS.length;
-  // console.log("getNextYetiIndex", { newIndex });
   return newIndex;
 }
 
@@ -167,9 +165,6 @@ function reducerInner(state: StateType, action: ActionsType): StateType {
       };
 
     case "nextStatus":
-      // console.log(
-      //   `nextStatus || prevStatus: ${state.status} | nextStatus: ${nextStatus}`,
-      // );
       return { ...state, status: nextStatus };
     case "yetiizeStart":
       return { ...state, status: "yetiizeStart" };
@@ -294,7 +289,6 @@ export default function usePhotoboothState({
     }
 
     if (status === "animateStart" && animationStatus === "ready") {
-      // console.log("starting animation");
       startAnimation();
       photoboothStateDispatch({ type: "nextStatus" });
     }

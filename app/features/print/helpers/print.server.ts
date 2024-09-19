@@ -1,133 +1,8 @@
 // @ts-ignore
 import ipp from "@sealsystems/ipp";
 import { MOCK_PRINT } from "~/constants";
+import getJobAttributesMock from "./getJobAttributesMock.server";
 
-/*
-{
-  "version": "2.0",
-  "statusCode": "successful-ok",
-  "id": 68965998,
-  "operation-attributes-tag": {
-    "attributes-charset": "utf-8",
-    "attributes-natural-language": "en-us"
-  },
-   'job-attributes-tag': {
-      'job-uri': 'ipp:///jobs/1',
-      'job-id': 1,
-      'job-state': 'processing',
-      'job-state-reasons': 'job-printing'
-    }
-}
-
-BAD PRINT RESPONSE:
-print response: 
-{
-  response: {
-    version: '2.0',
-    statusCode: 'server-error-busy',
-    id: 38612995,
-    'operation-attributes-tag': {
-      'attributes-charset': 'utf-8',
-      'attributes-natural-language': 'en-us',
-      'status-message': 'Server error busy'
-    }
-  }
-}
-
-GOOD PRINT RESPONSE
-print response: 
-{
-  response: {
-    version: '2.0',
-    statusCode: 'successful-ok',
-    id: 83706903,
-    'operation-attributes-tag': {
-      'attributes-charset': 'utf-8',
-      'attributes-natural-language': 'en-us'
-    },
-    'job-attributes-tag': {
-      'job-uri': 'ipp:///jobs/2',
-      'job-id': 2,
-      'job-state': 'processing',
-      'job-state-reasons': 'job-printing'
-    }
-  }
-}
-
-getJobsResult: 
-{
-  getJobsResult: {
-    version: '2.0',
-    statusCode: 'successful-ok',
-    id: 85146345,
-    'operation-attributes-tag': {
-      'attributes-charset': 'utf-8',
-      'attributes-natural-language': 'en-us'
-    },
-    'job-attributes-tag': { 'job-id': 1, 'job-uri': 'ipp:///jobs/1' }
-  }
-}
-
-jobAttributes: 
-{
-  jobAttributes: {
-    version: '2.0',
-    statusCode: 'successful-ok',
-    id: 61110276,
-    'operation-attributes-tag': {
-      'attributes-charset': 'utf-8',
-      'attributes-natural-language': 'en-us'
-    },
-    'job-attributes-tag': {
-      'job-id': 1,
-      'job-uri': 'ipp:///jobs/1',
-      'job-uuid': 'urn:uuid:f875d5e4-b776-4168-91a1-dcc2c9d1aa9b',
-      'job-printer-uri': 'http://10.0.0.145:631/',
-      'job-state': 'processing-stopped', // TODO JTE <---
-      'job-state-reasons': 'job-printing', // TODO JTE <---
-      'job-printer-up-time': 2944,
-      'job-originating-user-name': '',
-      'job-name': 'foo',
-      'time-at-creation': 2198,
-      'time-at-processing': 2198,
-      'time-at-completed': '', // TODO JTE <----
-      'job-impressions': '',
-      'job-impressions-completed': 0
-    }
-  }
-}
-
-jobAttributes: 
-{
-  jobAttributes: {
-    version: '2.0',
-    statusCode: 'successful-ok',
-    id: 94227514,
-    'operation-attributes-tag': {
-      'attributes-charset': 'utf-8',
-      'attributes-natural-language': 'en-us'
-    },
-    'job-attributes-tag': {
-      'job-id': 3,
-      'job-uri': 'ipp:///jobs/3',
-      'job-uuid': 'urn:uuid:f875d5e4-b776-4168-91a1-dcc2c9d1aa9b',
-      'job-printer-uri': 'http://10.0.0.145:631/',
-      'job-state': 'processing',
-      'job-state-reasons': 'job-printing',
-      'job-printer-up-time': 3262,
-      'job-originating-user-name': '',
-      'job-name': '',
-      'time-at-creation': 3259,
-      'time-at-processing': 3259,
-      'time-at-completed': '',
-      'job-impressions': '',
-      'job-impressions-completed': 0
-    }
-  }
-}
-*/
-
-// TODO JTE: handle server-error-busy
 type StatusCodeType = "successful-ok" | "server-error-busy";
 
 type JobStateType = "processing" | "processing-stopped" | "completed";
@@ -256,77 +131,6 @@ export type GetJobAttributesType = {
   "job-attributes-tag": GetJobAttributesJobAttributesTagType;
 };
 
-let mockIndex = 0;
-
-const waitingStatus = JSON.parse(`{
-  "version": "2.0",
-  "statusCode": "successful-ok",
-  "id": 94227514,
-  "operation-attributes-tag": {
-    "attributes-charset": "utf-8",
-    "attributes-natural-language": "en-us"
-  },
-  "job-attributes-tag": {
-    "job-id": 3,
-    "job-uri": "ipp:///jobs/3",
-    "job-uuid": "urn:uuid:f875d5e4-b776-4168-91a1-dcc2c9d1aa9b",
-    "job-printer-uri": "http://10.0.0.145:631/",
-    "job-state": "processing",
-    "job-state-reasons": "job-printing",
-    "job-printer-up-time": 3262,
-    "job-originating-user-name": "",
-    "job-name": "",
-    "time-at-creation": 3259,
-    "time-at-processing": 3259,
-    "time-at-completed": "",
-    "job-impressions": "",
-    "job-impressions-completed": 0
-  }
-}`);
-
-// const waitingStatus = "";
-
-const finishedStatus = JSON.parse(`{
-  "version": "2.0",
-  "statusCode": "successful-ok",
-  "id": 94227514,
-  "operation-attributes-tag": {
-    "attributes-charset": "utf-8",
-    "attributes-natural-language": "en-us"
-  },
-  "job-attributes-tag": {
-    "job-id": 3,
-    "job-uri": "ipp:///jobs/3",
-    "job-uuid": "urn:uuid:f875d5e4-b776-4168-91a1-dcc2c9d1aa9b",
-    "job-printer-uri": "http://10.0.0.145:631/",
-    "job-state": "completed",
-    "job-state-reasons": "job-printing",
-    "job-printer-up-time": 3262,
-    "job-originating-user-name": "",
-    "job-name": "",
-    "time-at-creation": 3259,
-    "time-at-processing": 3259,
-    "time-at-completed": 1234,
-    "job-impressions": "",
-    "job-impressions-completed": 0
-  }
-}`);
-// const finishedStatus = "";
-
-const mockStatuses = [waitingStatus, waitingStatus, finishedStatus];
-
-export async function getJobAttributesMock({
-  url,
-  jobId,
-}: {
-  url: string;
-  jobId: number | undefined;
-}) {
-  const status = mockStatuses[mockIndex % mockStatuses.length];
-  mockIndex += 1;
-  return Promise.resolve(status);
-}
-
 export async function getJobAttributes({
   url,
   jobId,
@@ -401,3 +205,128 @@ export async function getJobs({ url }: { url: string }) {
 
   return attributeResponse;
 }
+
+/*
+{
+  "version": "2.0",
+  "statusCode": "successful-ok",
+  "id": 68965998,
+  "operation-attributes-tag": {
+    "attributes-charset": "utf-8",
+    "attributes-natural-language": "en-us"
+  },
+   'job-attributes-tag': {
+      'job-uri': 'ipp:///jobs/1',
+      'job-id': 1,
+      'job-state': 'processing',
+      'job-state-reasons': 'job-printing'
+    }
+}
+
+BAD PRINT RESPONSE:
+print response: 
+{
+  response: {
+    version: '2.0',
+    statusCode: 'server-error-busy',
+    id: 38612995,
+    'operation-attributes-tag': {
+      'attributes-charset': 'utf-8',
+      'attributes-natural-language': 'en-us',
+      'status-message': 'Server error busy'
+    }
+  }
+}
+
+GOOD PRINT RESPONSE
+print response: 
+{
+  response: {
+    version: '2.0',
+    statusCode: 'successful-ok',
+    id: 83706903,
+    'operation-attributes-tag': {
+      'attributes-charset': 'utf-8',
+      'attributes-natural-language': 'en-us'
+    },
+    'job-attributes-tag': {
+      'job-uri': 'ipp:///jobs/2',
+      'job-id': 2,
+      'job-state': 'processing',
+      'job-state-reasons': 'job-printing'
+    }
+  }
+}
+
+getJobsResult: 
+{
+  getJobsResult: {
+    version: '2.0',
+    statusCode: 'successful-ok',
+    id: 85146345,
+    'operation-attributes-tag': {
+      'attributes-charset': 'utf-8',
+      'attributes-natural-language': 'en-us'
+    },
+    'job-attributes-tag': { 'job-id': 1, 'job-uri': 'ipp:///jobs/1' }
+  }
+}
+
+jobAttributes: 
+{
+  jobAttributes: {
+    version: '2.0',
+    statusCode: 'successful-ok',
+    id: 61110276,
+    'operation-attributes-tag': {
+      'attributes-charset': 'utf-8',
+      'attributes-natural-language': 'en-us'
+    },
+    'job-attributes-tag': {
+      'job-id': 1,
+      'job-uri': 'ipp:///jobs/1',
+      'job-uuid': 'urn:uuid:f875d5e4-b776-4168-91a1-dcc2c9d1aa9b',
+      'job-printer-uri': 'http://10.0.0.145:631/',
+      'job-state': 'processing-stopped', // TODO JTE <---
+      'job-state-reasons': 'job-printing', // TODO JTE <---
+      'job-printer-up-time': 2944,
+      'job-originating-user-name': '',
+      'job-name': 'foo',
+      'time-at-creation': 2198,
+      'time-at-processing': 2198,
+      'time-at-completed': '', // TODO JTE <----
+      'job-impressions': '',
+      'job-impressions-completed': 0
+    }
+  }
+}
+
+jobAttributes: 
+{
+  jobAttributes: {
+    version: '2.0',
+    statusCode: 'successful-ok',
+    id: 94227514,
+    'operation-attributes-tag': {
+      'attributes-charset': 'utf-8',
+      'attributes-natural-language': 'en-us'
+    },
+    'job-attributes-tag': {
+      'job-id': 3,
+      'job-uri': 'ipp:///jobs/3',
+      'job-uuid': 'urn:uuid:f875d5e4-b776-4168-91a1-dcc2c9d1aa9b',
+      'job-printer-uri': 'http://10.0.0.145:631/',
+      'job-state': 'processing',
+      'job-state-reasons': 'job-printing',
+      'job-printer-up-time': 3262,
+      'job-originating-user-name': '',
+      'job-name': '',
+      'time-at-creation': 3259,
+      'time-at-processing': 3259,
+      'time-at-completed': '',
+      'job-impressions': '',
+      'job-impressions-completed': 0
+    }
+  }
+}
+*/

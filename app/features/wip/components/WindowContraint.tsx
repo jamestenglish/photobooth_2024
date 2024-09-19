@@ -1,4 +1,4 @@
-import { SCREEN_WIDTH, SCREEN_HEIGHT, YETIIZE_STATUSES } from "~/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "~/constants";
 
 export default function WindowConstraint({
   children,

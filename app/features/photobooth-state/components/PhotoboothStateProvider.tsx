@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useMemo } from "react";
+import { createContext, useContext } from "react";
 import usePhotoboothState, {
   ActionsType,
   StatusType,

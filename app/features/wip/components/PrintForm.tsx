@@ -1,4 +1,4 @@
-import { Form, useFetcher } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import icon1 from "~/images/yeti-paint-icons-1.png";
 import icon2 from "~/images/yeti-paint-icons-2.png";
 

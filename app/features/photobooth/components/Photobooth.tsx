@@ -2,7 +2,7 @@ import Countdowner from "./Countdowner";
 import Flash from "./Flash";
 import CapturePreview from "./CapturePreview";
 import PhotoboothControls from "./PhotoboothControls";
-import { YETIIZE_STATUSES, SCREEN_WIDTH, SCREEN_HEIGHT } from "~/constants";
+import { YETIIZE_STATUSES, SCREEN_HEIGHT } from "~/constants";
 import {
   useAnimationRefs,
   usePhotoboothImages,
@@ -15,8 +15,9 @@ import PrintForm from "~/features/wip/components/PrintForm";
 import PreviousCaptures from "./PreviousCaptures";
 import Cancel from "~/features/wip/components/Cancel";
 import clsx from "clsx";
-import { useWindowSize } from "usehooks-ts";
 import { useCallback } from "react";
+import useIsHydrated from "../hooks/useIsHydrated";
+import { useWindowSize } from "usehooks-ts";
 
 export default function Photobooth() {
   const { photoboothStateDispatch } = usePhotoboothStateMethods();
@@ -33,9 +34,10 @@ export default function Photobooth() {
   const lastImg = images.length > 0 ? images[images.length - 1] : undefined;
 
   const areControlsPresent = !YETIIZE_STATUSES.includes(status);
-  const { width = 0, height = 0 } = useWindowSize();
+  // default for SSR
+  const { height = 0 } = useWindowSize();
 
-  const isFullScreen = width < SCREEN_WIDTH || height < SCREEN_HEIGHT;
+  const isFullScreen = height > SCREEN_HEIGHT - 1;
 
   const makeFullScreen = useCallback(() => {
     const body = document.getElementsByTagName("body")[0];
@@ -43,16 +45,31 @@ export default function Photobooth() {
     body.requestFullscreen();
   }, []);
 
+  const isHydrated = useIsHydrated();
+
   return (
     <>
       <div className="grid h-full w-full grid-cols-9 grid-rows-9 bg-snow">
+        {isHydrated && (
+          <div
+            className={clsx(
+              { hidden: isFullScreen },
+              "col-span-3 col-start-1 row-span-3 row-start-1 items-center align-middle",
+            )}
+          >
+            <button
+              onClick={makeFullScreen}
+              className="align-center mountains-of-christmas-bold inline-flex content-center items-center rounded-3xl border-4 border-pastel px-4 py-2 text-3xl text-pastel hover:bg-ltblue hover:text-dkblue"
+            >
+              full
+            </button>
+          </div>
+        )}
+
         <Flash />
-
         <Countdowner />
-
         <YetiizeLoading />
         <CapturePreview lastImg={lastImg} />
-
         {/* Want to leave this element here so the webcam stays on */}
         {/* because that can take a second to initialize */}
         <div
@@ -70,18 +87,6 @@ export default function Photobooth() {
             <PreviousCaptures />
           </div>
         </div>
-
-        {!isFullScreen && (
-          <div className="col-span-3 col-start-1 row-span-3 row-start-1 items-center align-middle">
-            <button
-              onClick={makeFullScreen}
-              className="align-center mountains-of-christmas-bold inline-flex content-center items-center rounded-3xl border-4 border-pastel px-4 py-2 text-3xl text-pastel hover:bg-ltblue hover:text-dkblue"
-            >
-              full
-            </button>
-          </div>
-        )}
-
         {!areControlsPresent && (
           <>
             <YetiizeControls />
