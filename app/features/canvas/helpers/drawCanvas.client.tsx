@@ -1,5 +1,6 @@
 import { YETIS } from "~/constants";
 import { COLORS } from "~/constants/colors";
+import SETTINGS from "~/constants/canvas";
 
 export function createImageLoadPromise(img: HTMLImageElement) {
   return new Promise((resolve) => {
@@ -9,20 +10,23 @@ export function createImageLoadPromise(img: HTMLImageElement) {
   });
 }
 
-const SETTINGS = {
-  WIDTH: 1200,
-  HEIGHT: 1800,
-  PICTURE_WIDTH: 566,
-  PICTURE_HEIGHT: 426,
-  INITIAL_X: 18,
-  X_OFFSET: 600,
-  Y_OFFSETS: [30, 477, 922],
-  SECONDARY_COLOR: COLORS.SECONDARY,
-  PRIMARY_COLOR: COLORS.PRIMARY,
-  BG_COLOR: COLORS.BG,
-  FRAME_WIDTH: 8,
-  TEXT_OUTLINE_WIDTH: 8,
-} as const;
+const drawText = ({
+  text,
+  x,
+  y,
+  ctx,
+}: {
+  text: string;
+  x: number;
+  y: number;
+  ctx: CanvasRenderingContext2D;
+}) => {
+  ctx.strokeText(text, x, y, 598);
+  ctx.fillText(text, x, y, 598);
+
+  ctx.strokeText(text, x + SETTINGS.X_OFFSET, y, SETTINGS.X_OFFSET);
+  ctx.fillText(text, x + SETTINGS.X_OFFSET, y, SETTINGS.X_OFFSET);
+};
 
 export default async function drawCanvas({
   promiseRef,
@@ -100,37 +104,43 @@ export default async function drawCanvas({
         );
       });
     });
-    ctx.font = `normal 700 120px "Mountains of Christmas"`;
+    ctx.font = `normal 700 120px "${SETTINGS.FONT}"`;
     ctx.textAlign = "center";
     ctx.fillStyle = SETTINGS.SECONDARY_COLOR;
     ctx.strokeStyle = SETTINGS.PRIMARY_COLOR;
     ctx.lineWidth = SETTINGS.TEXT_OUTLINE_WIDTH;
-    const line1 = import.meta.env.VITE_LINE_1;
-    ctx.strokeText(line1, 300, 1480, 598);
-    ctx.fillText(line1, 300, 1480, 598);
 
-    ctx.strokeText(line1, 900, 1480, 598);
-    ctx.fillText(line1, 900, 1480, 598);
+    drawText({
+      text: SETTINGS.LINE_1,
+      x: SETTINGS.X_TEXT,
+      y: SETTINGS.Y_TEXT_1,
+      ctx,
+    });
 
-    const line2 = import.meta.env.VITE_LINE_2;
-    ctx.strokeText(line2, 300, 1620, 598);
-    ctx.fillText(line2, 300, 1620, 598);
-    ctx.strokeText(line2, 900, 1620, 598);
-    ctx.fillText(line2, 900, 1620, 598);
+    drawText({
+      text: SETTINGS.LINE_2,
+      x: SETTINGS.X_TEXT,
+      y: SETTINGS.Y_TEXT_2,
+      ctx,
+    });
 
-    const line3 = import.meta.env.VITE_LINE_3;
-    ctx.font = `normal 700 70px "Mountains of Christmas", serif`;
-    ctx.strokeText(line3, 300, 1750, 598);
-    ctx.fillText(line3, 300, 1750, 598);
-    ctx.strokeText(line3, 900, 1750, 598);
-    ctx.fillText(line3, 900, 1750, 598);
+    ctx.font = `normal 700 70px "${SETTINGS.FONT}", serif`;
 
-    const line4 = import.meta.env.VITE_LINE_4;
-    ctx.font = `normal 700 40px "Mountains of Christmas", serif`;
-    ctx.strokeText(line4, 410, 1730, 598);
-    ctx.fillText(line4, 410, 1730, 598);
-    ctx.strokeText(line4, 1010, 1730, 598);
-    ctx.fillText(line4, 1010, 1730, 598);
+    drawText({
+      text: SETTINGS.LINE_3,
+      x: SETTINGS.X_TEXT,
+      y: SETTINGS.Y_TEXT_3,
+      ctx,
+    });
+
+    ctx.font = `normal 700 40px "${SETTINGS.FONT}", serif`;
+
+    drawText({
+      text: SETTINGS.LINE_3_SUPER,
+      x: SETTINGS.X_TEXT_SUPER_SCRIPT + SETTINGS.LINE_3_SUPER_OFFSET,
+      y: SETTINGS.Y_TEXT_3_SUPER,
+      ctx,
+    });
   }
 
   const blob = await new Promise((resolve, reject) => {
@@ -175,7 +185,7 @@ export async function loadFonts(fontsToLoad: any) {
 }
 const fonts = [
   {
-    "font-family": "Mountains of Christmas",
+    "font-family": "${SETTINGS.FONT}",
     "font-style": "normal",
     "font-weight": 700,
     src: "https://fonts.gstatic.com/s/mountainsofchristmas/v22/3y9z6a4zcCnn5X0FDyrKi2ZRUBIy8uxoUo7eBGqJJPxIO7yLeEE.woff2",

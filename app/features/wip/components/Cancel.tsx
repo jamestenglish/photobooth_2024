@@ -15,7 +15,7 @@ export default function Cancel() {
         <div>
           <button
             onClick={onClick}
-            className="mountains-of-christmas-bold bg-error hover:border-error flex items-center rounded-3xl border-4 border-ltblue px-6 py-4 text-6xl text-dkblue hover:bg-ltblue"
+            className="font-main flex items-center rounded-3xl border-4 border-ltblue bg-error px-6 py-4 text-6xl font-bold text-dkblue hover:border-error hover:bg-ltblue"
           >
             <img
               src={icon1}

@@ -42,7 +42,7 @@ export default function Countdowner() {
           fontSize: "16rem",
           animation: "ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite",
         }}
-        className="mountains-of-christmas-bold text-outline animate-ping text-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"
+        className="font-main text-outline animate-ping font-bold text-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.8)]"
       >
         {countdown}
       </span>

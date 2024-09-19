@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.mountains-of-christmas-regular {
-  font-family: "Mountains of Christmas", serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.mountains-of-christmas-bold {
-  font-family: "Mountains of Christmas", serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
 .text-outline {
   text-shadow:
     -1px -1px 0 #000,

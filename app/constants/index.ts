@@ -1,5 +1,6 @@
 import { StatusType } from "~/features/photobooth-state/hooks/usePhotoboothState";
 export { YETIS } from "./yetis";
+export * from "./screen";
 
 // export const MOCK_PRINT = false;
 export const MOCK_PRINT = true;
@@ -24,15 +25,6 @@ export const MAX_HEIGHT_START_RM = 12;
 export const COLUMN_GAP_TARGET_RM = 0.5;
 export const COLUMN_GAP_START_RM = 0.5;
 
-export const SCREEN_HEIGHT = 800;
-export const SCREEN_WIDTH = 1280;
-
-export const CAMERA_WIDTH_ASPECT = 3;
-export const CAMERA_HEIGHT_ASPECT = 4;
-
-export const WEBCAM_HEIGHT = Math.trunc((5 / 7) * SCREEN_HEIGHT);
-export const WEBCAM_WIDTH = Math.trunc(WEBCAM_HEIGHT * (4 / 3));
-
 export const YETIIZE_STATUSES: StatusType[] = [
   "yetiizeReady",
   "yetiizeStart",
@@ -43,4 +35,3 @@ export const PRINTER_URL = "http://10.0.0.145:631/";
 
 export const FLASH_TIME_IN_MS = 200;
 // export const FLASH_TIME_IN_MS = 20000;
-console.log({ SCREEN_HEIGHT, SCREEN_WIDTH, WEBCAM_HEIGHT, WEBCAM_WIDTH });

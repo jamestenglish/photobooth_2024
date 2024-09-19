@@ -11,7 +11,7 @@ export default function PrintForm({ file }: { file: string }) {
         <fetcher.Form id="printer-form" method="post">
           <input defaultValue={file} name="imgSrc" type="hidden" />
           <button
-            className="mountains-of-christmas-bold inline-flex items-center rounded-3xl border-4 border-dkblue bg-pastel px-6 py-4 text-8xl text-ltblue hover:bg-ltblue hover:text-dkblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
+            className="font-main inline-flex items-center rounded-3xl border-4 border-dkblue bg-pastel px-6 py-4 text-8xl font-bold text-ltblue hover:bg-ltblue hover:text-dkblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
             type="submit"
             name="intent"
             value="print"

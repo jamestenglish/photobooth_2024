@@ -46,7 +46,7 @@ export default function WebCamDisplay({
 
       {status === "ready" && (
         <button
-          className="mountains-of-christmas-bold my-12 inline-flex items-center rounded-3xl border-4 border-dkblue bg-transparent px-6 py-4 text-6xl text-dkblue hover:bg-ltblue"
+          className="font-main my-12 inline-flex items-center rounded-3xl border-4 border-dkblue bg-transparent px-6 py-4 text-6xl font-bold text-dkblue hover:bg-ltblue"
           onClick={capture}
         >
           <img

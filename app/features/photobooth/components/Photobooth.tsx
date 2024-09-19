@@ -59,7 +59,7 @@ export default function Photobooth() {
           >
             <button
               onClick={makeFullScreen}
-              className="align-center mountains-of-christmas-bold inline-flex content-center items-center rounded-3xl border-4 border-pastel px-4 py-2 text-3xl text-pastel hover:bg-ltblue hover:text-dkblue"
+              className="align-center font-main inline-flex content-center items-center rounded-3xl border-4 border-pastel px-4 py-2 text-3xl font-bold text-pastel hover:bg-ltblue hover:text-dkblue"
             >
               full
             </button>

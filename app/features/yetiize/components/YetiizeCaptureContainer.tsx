@@ -112,7 +112,7 @@ export default function YetiizeCaptureContainer({
         <button
           disabled={status !== "yetiizeReady"}
           onClick={onClickYetiize}
-          className="mountains-of-christmas-bold inline-flex items-center rounded-3xl border-4 border-dkblue px-6 py-4 text-5xl text-dkblue hover:bg-ltblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
+          className="font-main inline-flex items-center rounded-3xl border-4 border-dkblue px-6 py-4 text-5xl font-bold text-dkblue hover:bg-ltblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
         >
           <img
             src={icons[index]}
@@ -133,7 +133,7 @@ export default function YetiizeCaptureContainer({
 
           <button
             disabled={status !== "yetiizeReady"}
-            className="mountains-of-christmas-bold inline-flex items-center rounded-3xl border-4 border-dkblue px-6 py-4 text-5xl text-dkblue hover:bg-ltblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
+            className="font-main inline-flex items-center rounded-3xl border-4 border-dkblue px-6 py-4 text-5xl font-bold text-dkblue hover:bg-ltblue disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200"
             name="intent"
             value="yetiize"
           >
@@ -149,7 +149,7 @@ export default function YetiizeCaptureContainer({
       {doesBgRemovedMatchSrc && (
         <button
           onClick={onClickUnYetiize}
-          className="align-center mountains-of-christmas-bold inline-flex content-center items-center rounded-3xl border-4 border-pastel px-4 py-2 text-3xl text-pastel hover:bg-ltblue hover:text-dkblue"
+          className="align-center font-main inline-flex content-center items-center rounded-3xl border-4 border-pastel px-4 py-2 text-3xl font-bold text-pastel hover:bg-ltblue hover:text-dkblue"
         >
           <img
             src={sadIcons[index]}

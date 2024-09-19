@@ -10,10 +10,10 @@ export default function PrintingLoading() {
           alt="yeti thinking"
         />
       </div>
-      <div className="mountains-of-christmas-bold text-outline z-20 col-span-9 col-start-1 row-start-1 grid items-center justify-center text-9xl text-white drop-shadow-[0_5px_13px_rgba(0,0,0,1)]">
+      <div className="font-main text-outline z-20 col-span-9 col-start-1 row-start-1 grid items-center justify-center text-9xl font-bold text-white drop-shadow-[0_5px_13px_rgba(0,0,0,1)]">
         <span>Patience</span>
       </div>
-      <div className="mountains-of-christmas-bold text-outline z-20 col-span-9 col-start-1 row-start-8 grid items-center justify-center text-9xl text-white drop-shadow-[0_13px_13px_rgba(0,0,0,1)]">
+      <div className="font-main text-outline z-20 col-span-9 col-start-1 row-start-8 grid items-center justify-center text-9xl font-bold text-white drop-shadow-[0_13px_13px_rgba(0,0,0,1)]">
         <span>Yetis are working</span>
       </div>
     </>
