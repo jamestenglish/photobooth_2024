@@ -18,7 +18,7 @@ const printAction = async ({ formData }: { formData: FormData }) => {
   try {
     const printData = printActionFormSchema.parse(formPayload);
     const { imgSrc } = printData;
-    saveImg({ imgSrc, type: "file" });
+    saveImg({ imgSrc, type: "final" });
 
     const res: Response = await fetch(imgSrc);
     const blob: Blob = await res.blob();

@@ -7,7 +7,7 @@ export const MOCK_PRINT = true;
 // export const DO_QUERY_PRINTER_PRINTER = true;
 export const DO_QUERY_PRINTER_PRINTER = false;
 
-const isNormal = false;
+const isNormal = true;
 
 export const PRINTER_POLL_RATE = isNormal ? 10000 : 3000;
 

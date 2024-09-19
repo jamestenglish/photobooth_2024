@@ -66,7 +66,6 @@ export default function Printing() {
   const fetcher = useFetcher<typeof action>();
 
   useInterval(() => {
-    console.log("submit");
     fetcher.submit({}, { method: "post" });
   }, PRINTER_POLL_RATE);
 

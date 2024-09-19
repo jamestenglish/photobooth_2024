@@ -44,9 +44,6 @@ export default function YetiizeCaptureContainer({
 
   useEffect(() => {
     if (formResultIndex === `${index}`) {
-      if (data !== undefined) {
-        console.log("data", data);
-      }
       if (isBgRemovedImgEmpty) {
         if (state === "submitting") {
           photoboothStateDispatch({ type: "yetiizeStart" });

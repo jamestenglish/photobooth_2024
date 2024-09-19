@@ -30,15 +30,10 @@ export default function CapturePreview({
 
   useEffect(() => {
     if (status === "capturePreview" && lastImg !== undefined) {
-      console.log("submitting...");
-      const formData = new FormData();
-      formData.set("imgSrc", lastImg);
-      formData.set("intent", "saveImg");
       fetcher.submit(
         { imgSrc: lastImg, intent: "saveImg" },
         { method: "post" },
       );
-      // fetcher.submit(formData, { method: "post" });
     }
   }, [status, lastImg]);
 
@@ -53,7 +48,7 @@ export default function CapturePreview({
   const isCapturePreview = status === "capturePreview";
 
   useEffect(() => {
-    if (isCapturePreview || status === "captureFlash") {
+    if (status === "captureFlash") {
       setPeekYetiMeta((prev) => {
         for (let i = 0; i < YETI_PEEK_RETRY; i++) {
           const rand = getRandomInt(5);
@@ -73,7 +68,7 @@ export default function CapturePreview({
         return prev;
       });
     }
-  }, [status, isCapturePreview]);
+  }, [status]);
 
   const { index } = peekYetiMeta;
 
