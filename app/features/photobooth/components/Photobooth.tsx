@@ -92,7 +92,7 @@ export default function Photobooth() {
             <YetiizeControls />
 
             <Cancel />
-            <PrintForm file={finalImg} />
+            <PrintForm imgSrc={finalImg} />
           </>
         )}
       </div>

@@ -143,12 +143,6 @@ export default async function drawCanvas({
     });
   }
 
-  const blob = await new Promise((resolve, reject) => {
-    return canvas.toBlob(
-      (blob) => (blob ? resolve(blob) : reject()),
-      "image/png",
-    );
-  });
   setFinalImg(canvas.toDataURL("image/jpeg"));
 }
 
