@@ -22,7 +22,7 @@ const SETTINGS = {
   FONT: "Mountains of Christmas",
   LINE_1: import.meta.env.VITE_LINE_1 ?? "James'",
   LINE_2: import.meta.env.VITE_LINE_2 ?? "Birthday!",
-  LINE_3: import.meta.env.VITE_LINE_3 ?? "Septemeber 27   2024",
+  LINE_3: import.meta.env.VITE_LINE_3 ?? "September 27   2024",
   LINE_3_SUPER: import.meta.env.VITE_LINE_3_SUPERSCRIPT ?? "th",
   LINE_3_SUPER_OFFSET: parseInt(
     import.meta.env.VITE_LINE_3_SUPERSCRIPT_OFFSET ?? 0,
